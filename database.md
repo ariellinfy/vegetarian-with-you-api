@@ -59,6 +59,7 @@ email text UNIQUE NOT NULL,
 location VARCHAR(50),
 contributions INT NOT NULL DEFAULT 0,
 joined TIMESTAMP NOT NULL,
+last_login TIMESTAMP NOT NULL DEFAULT NOW(),
 last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
 CONSTRAINT fk_user
 FOREIGN KEY(email)

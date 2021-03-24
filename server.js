@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+
 const knex = require('knex')({
 	client: 'pg',
 	connection: {
@@ -13,6 +13,8 @@ const knex = require('knex')({
   });
 
 const signUp = require('./users-handler/sign-up');
+const signIn = require('./users-handler/sign-in');
+const signOut = require('./users-handler/sign-out');
 
 const app = express();
 app.use(cors());
@@ -25,20 +27,14 @@ app.get('/', (req, res) => {
 	res.send('success');
 });
 
-// Create new user profile
-app.post('/users/signup', signUp.handleSignUp(knex, bcrypt, jwt));
+// User sign-up / new user profile
+app.post('/users/signup', signUp.handleSignUp(knex, bcrypt));
 
-// User signin
-app.post('/users/signin', (req, res) => {
-	console.log(req.body);
-	res.send('success');
-});
+// User sign-in
+app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 
-// User signout
-app.post('/users/signout', (req, res) => {
-	console.log(req.body);
-	res.send('success');
-});
+// User sign-out
+app.post('/users/signout', signOut.handleSignOut(knex, bcrypt));
 
 // Update user profile: name, location, avatar
 // Upload user avatar
