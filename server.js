@@ -21,20 +21,55 @@ app.get('/', (req, res) => {
 	res.send('success');
 });
 
-app.post('/users/register', (req, res) => {
+// Create new user profile
+app.post('/users/signup', (req, res) => {
 	console.log(req.body);
 	res.send('success');
 })
 
+// User signin
 app.post('/users/signin', (req, res) => {
 	console.log(req.body);
 	res.send('success');
 });
 
+// User signout
 app.post('/users/signout', (req, res) => {
 	console.log(req.body);
 	res.send('success');
 });
+
+// Update user profile: name, location, avatar
+// Upload user avatar
+// Delete user avatar
+
+// Update account info (email)
+
+// Reset password
+
+// Delete an user / close account
+
+
+
+
+
+
+// Create a new restaurant
+
+// Update existing restaurant info
+
+// Get a specific restaurant info based on id, and all of its reviews
+
+// Get restaurants (explore and find)
+
+
+// Create a new review
+
+// Update an existing review
+
+// Images
+
+
 
 app.listen(port, error => {
     if(error) throw error;
