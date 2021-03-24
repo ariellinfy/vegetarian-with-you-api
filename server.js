@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const knex = require('knex')({
 	client: 'pg',
 	connection: {
@@ -9,6 +11,8 @@ const knex = require('knex')({
 	  database : 'vegetarian-with-you'
 	}
   });
+
+const signUp = require('./users-handler/sign-up');
 
 const app = express();
 app.use(cors());
@@ -22,10 +26,7 @@ app.get('/', (req, res) => {
 });
 
 // Create new user profile
-app.post('/users/signup', (req, res) => {
-	console.log(req.body);
-	res.send('success');
-})
+app.post('/users/signup', signUp.handleSignUp(knex, bcrypt, jwt));
 
 // User signin
 app.post('/users/signin', (req, res) => {
