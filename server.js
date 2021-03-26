@@ -12,6 +12,7 @@ const knex = require('knex')({
 	}
   });
 
+const auth = require('./users-handler/auth');
 const signUp = require('./users-handler/sign-up');
 const signIn = require('./users-handler/sign-in');
 const signOut = require('./users-handler/sign-out');
@@ -34,7 +35,7 @@ app.post('/users/signup', signUp.handleSignUp(knex, bcrypt));
 app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 
 // User sign-out
-app.post('/users/signout', signOut.handleSignOut(knex, bcrypt));
+app.post('/users/signout', auth, signOut.handleSignOut());
 
 // Update user profile: name, location, avatar
 // Upload user avatar

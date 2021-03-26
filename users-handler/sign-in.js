@@ -30,5 +30,5 @@ const handleSignIn = (knex, bcrypt) => (req, res) => {
 }
 
 module.exports = {
-	handleSignIn: handleSignIn
+    handleSignIn: handleSignIn
 };
