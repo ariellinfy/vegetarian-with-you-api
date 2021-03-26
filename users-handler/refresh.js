@@ -6,7 +6,6 @@ const refresh = (exp, userId, token) => {
         const payload = {user_id: userId};
         token = userAuth.token(payload);
         return token;
-        
     } else if (exp - nowUnixSeconds > 60) {
         return token;
     } else {

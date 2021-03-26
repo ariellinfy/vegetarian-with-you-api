@@ -49,7 +49,8 @@ last_modified TIMESTAMP NOT NULL DEFAULT NOW()
 CREATE TABLE IF NOT EXISTS login (
 login_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
 hash VARCHAR(100) NOT NULL,
-email text UNIQUE NOT NULL
+email text UNIQUE NOT NULL,
+last_modified TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS users (

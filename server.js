@@ -17,6 +17,8 @@ const signUp = require('./users-handler/sign-up');
 const signIn = require('./users-handler/sign-in');
 const signOut = require('./users-handler/sign-out');
 const editProfile = require('./users-handler/edit-profile');
+const resetPassword = require('./users-handler/reset-password');
+const updateEmail = require('./users-handler/update-email');
 
 const app = express();
 app.use(cors());
@@ -39,17 +41,19 @@ app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 app.post('/users/signout', auth, signOut.handleSignOut());
 
 // Update user profile: name, location
-app.post('/users/editprofile', auth, editProfile.handleEditProfile(knex));
+app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 
 // Upload/update user avatar
 // Delete user avatar
 
-// Update account info (email)
+// Update email
+app.patch('/users/updateemail', auth, updateEmail.handleUpdateEmail(knex));
 
 // Reset password
+app.patch('/users/resetpassword', auth, resetPassword.handleResetPassword(knex, bcrypt));
 
 // Delete an user / close account
-
+// app.post('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bcrypt));
 
 
 
