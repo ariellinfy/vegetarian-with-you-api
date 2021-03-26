@@ -1,27 +1,17 @@
-const jwt = require('jsonwebtoken');
 const userAuth = require('./generate-auth-token');
 
-const refresh = (req, res) => {
-    const auth = req.header('Authorization');
-    if (auth) {
-        const token = auth.replace('Bearer ', '');
+const refresh = (exp, userId, token) => {
+    const nowUnixSeconds = Math.round(Number(new Date()) / 1000);
+    if (0 < exp - nowUnixSeconds < 60) {
+        const payload = {user_id: userId};
+        token = userAuth.token(payload);
+        return token;
+        
+    } else if (exp - nowUnixSeconds > 60) {
+        return token;
     } else {
-        return res.status(400).json('auth info not provided');
+        return null;
     }
-	jwt.verify(token, 'shh', function(err, decoded) {
-        if (err) {
-            return res.status(400).json(err.message);
-        } else {
-            const nowUnixSeconds = Math.round(Number(new Date()) / 1000);
-            if (payload.exp - nowUnixSeconds > 30) {
-                return token;
-            } else {
-                const payload = {user_id: decoded.payload.id, public_name: decoded.payload.username};
-                token = userAuth.token(payload);
-                return token;
-            }
-        }
-    });
 }
 
 module.exports = {

@@ -9,6 +9,7 @@ const auth = async (req, res, next) => {
         } else {
             req.token = token;
             req.userId = decoded.id;
+            req.exp = decoded.exp;
             next();
         }
     });    
