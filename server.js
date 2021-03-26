@@ -19,6 +19,7 @@ const signOut = require('./users-handler/sign-out');
 const editProfile = require('./users-handler/edit-profile');
 const resetPassword = require('./users-handler/reset-password');
 const updateEmail = require('./users-handler/update-email');
+const closeAccount = require('./users-handler/close-account');
 
 const app = express();
 app.use(cors());
@@ -53,7 +54,7 @@ app.patch('/users/updateemail', auth, updateEmail.handleUpdateEmail(knex));
 app.patch('/users/resetpassword', auth, resetPassword.handleResetPassword(knex, bcrypt));
 
 // Delete an user / close account
-// app.post('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bcrypt));
+app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bcrypt));
 
 
 

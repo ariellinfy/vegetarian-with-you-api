@@ -19,7 +19,7 @@ const handleEditProfile = (knex) => async (req, res) => {
             if (!token) {
                 res.status(400).json('token expired');
             }
-            res.status(200).json({ user: user[0], token });
+            return res.status(200).json({ user: user[0], token });
         })
         .catch(err => res.status(400).json(err))
     } catch (err) {

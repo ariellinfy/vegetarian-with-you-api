@@ -26,13 +26,20 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
                 })
                 .then(user => {
                     const token = userAuth.token(user[0]);
-                    res.status(201).json({ user: user[0], token });
+                    return res.status(201).json({ user: user[0], token });
                 })
             })
             .then(trx.commit)
             .catch(trx.rollback)
         })
-        .catch(err => res.status(400).json('unable to register'))
+        .catch(err => {
+            if (err.code === '23505') {
+                return res.status(400).json({ error: 'this email already existed, please try sign in or use another email to create new account' })
+            } else {
+                return res.status(400).json({ err })
+            }
+            
+        })
     } catch (err) {
         res.status(400).json(err);
     }
