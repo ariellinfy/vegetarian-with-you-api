@@ -21,6 +21,8 @@ const resetPassword = require('./users-handler/reset-password');
 const updateEmail = require('./users-handler/update-email');
 const closeAccount = require('./users-handler/close-account');
 
+const createRestaurant = require('./restaurants-handler/create-restaurant');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -58,10 +60,10 @@ app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bc
 
 
 // Create a new restaurant
-app.post('/restaurants/createrestaurant', auth, createRestaurant.handleCreateRestaurant());
+app.post('/restaurants/createrestaurant', auth, createRestaurant.handleCreateRestaurant(knex));
 
 // Update existing restaurant info
-app.patch('/restaurants/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant());
+// app.patch('/restaurants/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant());
 
 // Get a specific restaurant info based on id, and all of its reviews
 
@@ -69,10 +71,10 @@ app.patch('/restaurants/updaterestaurant', auth, updateRestaurant.handleUpdateRe
 
 
 // Create a new review
-app.post('/reviews/createreview', auth, createReview.handleCreateReview());
+// app.post('/reviews/createreview', auth, createReview.handleCreateReview());
 
 // Update an existing review
-app.patch('/reviews/updatereview', auth, updateReview.handleUpdateReview());
+// app.patch('/reviews/updatereview', auth, updateReview.handleUpdateReview());
 
 // Images
 

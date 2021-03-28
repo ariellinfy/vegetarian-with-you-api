@@ -16,10 +16,15 @@ price_range VARCHAR(20) NOT NULL,
 recommended_dishes text,
 disclosure BOOLEAN NOT NULL,
 create_at TIMESTAMP NOT NULL,
+create_by uuid,
 last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
 CONSTRAINT fk_restaurant
 FOREIGN KEY(restaurant_id)
 REFERENCES restaurants (restaurant_id)
+ON DELETE CASCADE,
+CONSTRAINT fk_user
+FOREIGN KEY(create_by)
+REFERENCES users (user_id)
 ON DELETE CASCADE
 );
 
@@ -40,10 +45,21 @@ brunch VARCHAR(10) NOT NULL,
 lunch VARCHAR(10) NOT NULL,
 dinner VARCHAR(10) NOT NULL,
 free_wifi VARCHAR(10) NOT NULL,
+takeaway VARCHAR(10) NOT NULL,
 delivery VARCHAR(10) NOT NULL,
 exclude_pungent VARCHAR(10) NOT NULL,
 create_at TIMESTAMP NOT NULL,
-last_modified TIMESTAMP NOT NULL DEFAULT NOW()
+create_by uuid,
+last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
+last_modified_by uuid,
+CONSTRAINT fk_user_create
+FOREIGN KEY(create_by)
+REFERENCES users (user_id)
+ON DELETE SET NULL,
+CONSTRAINT fk_user_modify
+FOREIGN KEY(last_modified_by)
+REFERENCES users (user_id)
+ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS login (
