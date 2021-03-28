@@ -57,12 +57,11 @@ app.patch('/users/resetpassword', auth, resetPassword.handleResetPassword(knex, 
 app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bcrypt));
 
 
-
-
-
 // Create a new restaurant
+app.post('/restaurants/createrestaurant', auth, createRestaurant.handleCreateRestaurant());
 
 // Update existing restaurant info
+app.patch('/restaurants/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant());
 
 // Get a specific restaurant info based on id, and all of its reviews
 
@@ -70,8 +69,10 @@ app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bc
 
 
 // Create a new review
+app.post('/reviews/createreview', auth, createReview.handleCreateReview());
 
 // Update an existing review
+app.patch('/reviews/updatereview', auth, updateReview.handleUpdateReview());
 
 // Images
 
