@@ -22,7 +22,7 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
 
 	if (!restaurantName || !restaurantAddress || !restaurantCity || !restaurantRegion || !restaurantCountry || !restaurantPhone){
 		return res.status(400).json('incorrect form submission');
-	}
+	};
     
     try {
         await knex.select('user_id').from('users')
@@ -64,7 +64,7 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-}
+};
 
 module.exports = {
     handleCreateRestaurant: handleCreateRestaurant
