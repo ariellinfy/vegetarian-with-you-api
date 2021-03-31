@@ -2,25 +2,12 @@ const refreshToken = require('../users-handler/refresh');
 
 const handleCreateRestaurant = (knex) => async (req, res) => {
 	const { restaurantName, 
-        restaurantAddress, 
-        restaurantCity, 
-        restaurantRegion, 
-        restaurantCountry, 
-        restaurantPostalCode, 
-        restaurantPhone,
-        restaurantWebsite,
-        restaurantType,
-        restaurantCuisine,
-        breakfast,
-        brunch,
-        lunch,
-        dinner,
-        restaurantWifi,
-        restaurantTakeaway,
-        restaurantDelivery,
-        restaurantPungent } = req.body;
+        restaurantAddress, restaurantCity, restaurantRegion, restaurantCountry, restaurantPostalCode, 
+        restaurantPhone, restaurantWebsite, restaurantType, restaurantCuisine,
+        breakfast, brunch, lunch, dinner,
+        restaurantWifi, restaurantTakeaway, restaurantDelivery, restaurantPungent } = req.body;
 
-	if (!restaurantName || !restaurantAddress || !restaurantCity || !restaurantRegion || !restaurantCountry || !restaurantPhone){
+	if (!restaurantName || !restaurantAddress || !restaurantRegion || !restaurantCountry || !restaurantPhone){
 		return res.status(400).json('incorrect form submission');
 	};
     

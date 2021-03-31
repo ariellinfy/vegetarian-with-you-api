@@ -22,6 +22,7 @@ const updateEmail = require('./users-handler/update-email');
 const closeAccount = require('./users-handler/close-account');
 
 const createRestaurant = require('./restaurants-handler/create-restaurant');
+const updateRestaurant = require('./restaurants-handler/update-restaurant');
 const createReview = require('./reviews-handler/create-review');
 
 const app = express();
@@ -64,7 +65,7 @@ app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bc
 app.post('/onrestaurant/createrestaurant', auth, createRestaurant.handleCreateRestaurant(knex));
 
 // Update existing restaurant info
-// app.patch('/onrestaurant/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant(knex));
+app.patch('/onrestaurant/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant(knex));
 
 // Get a specific restaurant info based on id, and all of its reviews
 
