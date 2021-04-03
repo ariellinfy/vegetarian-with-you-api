@@ -24,6 +24,7 @@ const closeAccount = require('./users-handler/close-account');
 const createRestaurant = require('./restaurants-handler/create-restaurant');
 const updateRestaurant = require('./restaurants-handler/update-restaurant');
 const createReview = require('./reviews-handler/create-review');
+const updateReview = require('./reviews-handler/update-review');
 
 const app = express();
 app.use(cors());
@@ -76,7 +77,7 @@ app.patch('/onrestaurant/updaterestaurant', auth, updateRestaurant.handleUpdateR
 app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
 
 // Update an existing review
-// app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
+app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
 
 // Images
 

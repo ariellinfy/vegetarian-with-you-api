@@ -1,7 +1,10 @@
 const refreshToken = require('../users-handler/refresh');
 
 const handleCreateReview = (knex) => async (req, res) => {
-	const { restaurantId, foodRate, serviceRate, valueRate, atmosphereRate, reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, disclosure } = req.body;
+	const { restaurantId, 
+        foodRate, serviceRate, valueRate, atmosphereRate, 
+        reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
+        disclosure } = req.body;
 
 	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
 		return res.status(400).json('incorrect form submission');

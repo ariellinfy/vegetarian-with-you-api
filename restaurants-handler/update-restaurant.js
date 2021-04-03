@@ -7,7 +7,7 @@ const handleUpdateRestaurant = (knex) => async (req, res) => {
         breakfast, brunch, lunch, dinner,
         restaurantWifi, restaurantTakeaway, restaurantDelivery, restaurantPungent } = req.body;
 
-	if (!restaurantName || !restaurantAddress || !restaurantRegion || !restaurantCountry || !restaurantPhone){
+	if (!restaurantId || !restaurantName || !restaurantAddress || !restaurantRegion || !restaurantCountry || !restaurantPhone) {
 		return res.status(400).json('incorrect form submission');
 	};
     
