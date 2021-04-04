@@ -1,4 +1,5 @@
 const refreshToken = require('../users-handler/refresh');
+const refreshData = require('../restaurants-handler/refresh-data');
 
 const handleCreateReview = (knex) => async (req, res) => {
 	const { restaurantId, 
@@ -29,7 +30,7 @@ const handleCreateReview = (knex) => async (req, res) => {
                 food_rate: foodRate,
                 service_rate: serviceRate,
                 value_rate: valueRate,
-                ambiance_rate: atmosphereRate,
+                atmosphere_rate: atmosphereRate,
                 overall_rate: overallRate,
                 visit_period: visitPeriod,
                 type_of_visit: visitType,
@@ -41,11 +42,12 @@ const handleCreateReview = (knex) => async (req, res) => {
             })
             .returning('*')
             .then(review => {
+                refreshData(knex, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                    if (!token) {
-                        res.status(400).json('token expired');
-                    }
-                    return res.status(200).json({ data: review[0], token });
+                if (!token) {
+                    res.status(400).json('token expired');
+                }
+                return res.status(200).json({ data: review[0], token });
             })
             .catch(err => res.status(400).json({ error: 'unable to insert new data' }))
         })

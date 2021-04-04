@@ -42,7 +42,7 @@ const handleUpdateReview = (knex) => async (req, res) => {
                 food_rate: foodRate,
                 service_rate: serviceRate,
                 value_rate: valueRate,
-                ambiance_rate: atmosphereRate,
+                atmosphere_rate: atmosphereRate,
                 overall_rate: overallRate,
                 visit_period: visitPeriod,
                 type_of_visit: visitType,
