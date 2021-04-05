@@ -26,6 +26,8 @@ const updateRestaurant = require('./restaurants-handler/update-restaurant');
 const createReview = require('./reviews-handler/create-review');
 const updateReview = require('./reviews-handler/update-review');
 
+const requestAllRestaurants = require('./restaurants-handler/request-all-restaurants');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -81,6 +83,9 @@ app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex))
 
 // Images
 
+
+
+app.get('/restaurants', requestAllRestaurants.handleRequestAllRestaurants(knex));
 
 
 app.listen(port, error => {

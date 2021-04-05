@@ -2,7 +2,7 @@ const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 
 const handleCreateReview = (knex) => async (req, res) => {
-	const { restaurantId, 
+	let { restaurantId, 
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
         disclosure } = req.body;
@@ -18,6 +18,10 @@ const handleCreateReview = (knex) => async (req, res) => {
     } else {
         return res.status(400).json('incorrect rating format');
     };
+
+    if (!recommendDish) {
+        recommendDish = null;
+    }
 
     try {
         await knex.select('user_id').from('users')
@@ -42,7 +46,7 @@ const handleCreateReview = (knex) => async (req, res) => {
             })
             .returning('*')
             .then(review => {
-                refreshData(knex, restaurantId);
+                refreshData.refreshRestaurantData(knex, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                 if (!token) {
                     res.status(400).json('token expired');

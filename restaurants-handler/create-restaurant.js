@@ -34,6 +34,12 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
                 takeaway: restaurantTakeaway,
                 delivery: restaurantDelivery,
                 exclude_pungent: restaurantPungent,
+                overall_rate: 0,
+                food_rate: 0,
+                service_rate: 0,
+                value_rate: 0,
+                atmosphere_rate: 0,
+                price_range: 'unknown',
                 create_at: new Date(),
                 create_by: data[0].user_id,
                 last_modified_by: data[0].user_id
