@@ -2,7 +2,7 @@ const handleRequestAllRestaurants = (knex) => async (req, res) => {
     console.log(req.query);
 
     try {
-        await knex.select('restaurant_id', 'restaurant_name', 'address', 'city', 'region', 'country', 'type', 'cuisine', 'price_range', 'overall_rate').from('restaurants')
+        await knex.select('restaurant_id', 'restaurant_name', 'address', 'city', 'region', 'country', 'postal_code', 'type', 'cuisine', 'price_range', 'overall_rate').from('restaurants')
         .then(data => {
             return res.status(200).json({ data: data });
         })

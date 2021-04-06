@@ -27,6 +27,7 @@ const createReview = require('./reviews-handler/create-review');
 const updateReview = require('./reviews-handler/update-review');
 
 const requestAllRestaurants = require('./restaurants-handler/request-all-restaurants');
+const requestRestaurantById = require('./restaurants-handler/request-restaurant-by-id');
 
 const app = express();
 app.use(cors());
@@ -86,6 +87,8 @@ app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex))
 
 
 app.get('/restaurants', requestAllRestaurants.handleRequestAllRestaurants(knex));
+
+app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(knex));
 
 
 app.listen(port, error => {
