@@ -31,7 +31,7 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
                 lunch: lunch,
                 dinner: dinner,
                 free_wifi: restaurantWifi,
-                takeaway: restaurantTakeaway,
+                takeout: restaurantTakeaway,
                 delivery: restaurantDelivery,
                 exclude_pungent: restaurantPungent,
                 overall_rate: 0,
@@ -39,7 +39,8 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
                 service_rate: 0,
                 value_rate: 0,
                 atmosphere_rate: 0,
-                price_range: 'unknown',
+                price_range: 0,
+                review_count: 0,
                 create_at: new Date(),
                 create_by: data[0].user_id,
                 last_modified_by: data[0].user_id
