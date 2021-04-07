@@ -1,4 +1,5 @@
 const refreshToken = require('../users-handler/refresh');
+const refreshData = require('../restaurants-handler/refresh-data');
 
 const handleUpdateReview = (knex) => async (req, res) => {
 	const { reviewId, restaurantId,
@@ -18,6 +19,20 @@ const handleUpdateReview = (knex) => async (req, res) => {
         return res.status(400).json('incorrect rating format');
     };
 
+    let priceId = 0;
+
+    if (price === 'cheap eats') {
+        priceId = 1;
+    } else if (price === 'mid-range') {
+        priceId = 2;
+    } else if (price === 'fine dining') {
+        priceId = 3;
+    }
+
+    if (!recommendDish) {
+        recommendDish = null;
+    }
+
     let isOwner = false;
 
     try {
@@ -29,7 +44,7 @@ const handleUpdateReview = (knex) => async (req, res) => {
             }
         })
     } catch (e) {
-            res.status(400).json('error validating owner');
+        res.status(400).json('error validating owner');
     };
 
 
@@ -46,13 +61,14 @@ const handleUpdateReview = (knex) => async (req, res) => {
                 overall_rate: overallRate,
                 visit_period: visitPeriod,
                 type_of_visit: visitType,
-                price_range: price,
+                price_range: priceId,
                 recommended_dishes: recommendDish,
                 disclosure: disclosure,
                 last_modified: new Date()
             })
             .returning('*')
             .then(review => {
+                refreshData.refreshRestaurantData(knex, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                 if (!token) {
                     res.status(400).json('token expired');

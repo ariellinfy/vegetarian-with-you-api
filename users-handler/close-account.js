@@ -20,7 +20,6 @@ const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
     };
 
     if (isValid) {
-        console.log(isValid)
         try {
             await knex.select('*').from('login')
             .where({ email: email })
