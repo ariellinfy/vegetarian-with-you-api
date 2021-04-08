@@ -1,4 +1,6 @@
 const handleRequestRestaurantReviews = (knex) => async (req, res) => {
+    console.log(req.query);
+
     if (req.query.restaurantId) {
         if (req.query.sortBy) {
             const parts = req.query.sortBy.split(':');
@@ -19,7 +21,7 @@ const handleRequestRestaurantReviews = (knex) => async (req, res) => {
                 await knex.select('*')
                 .from('reviews')
                 .where('restaurant_id', '=', req.query.restaurantId)
-                .orderBy('create_at', 'desc')
+                .orderBy('last_modified', 'desc')
                 .then(data => {
                     return res.status(200).json({ data: data });
                 })
