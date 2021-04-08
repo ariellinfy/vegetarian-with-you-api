@@ -29,6 +29,8 @@ const updateReview = require('./reviews-handler/update-review');
 const requestAllRestaurants = require('./restaurants-handler/request-all-restaurants');
 const requestRestaurantById = require('./restaurants-handler/request-restaurant-by-id');
 
+const requestRestaurantReviews = require('./reviews-handler/request-restaurant-reviews');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -71,11 +73,6 @@ app.post('/onrestaurant/createrestaurant', auth, createRestaurant.handleCreateRe
 // Update existing restaurant info
 app.patch('/onrestaurant/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant(knex));
 
-// Get a specific restaurant info based on id, and all of its reviews
-
-// Get restaurants (explore and find)
-
-
 // Create a new review
 app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
 
@@ -85,10 +82,14 @@ app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex))
 // Images
 
 
-
+// Request all restaurants
 app.get('/restaurants', requestAllRestaurants.handleRequestAllRestaurants(knex));
 
+// Request restaurant by id
 app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(knex));
+
+// Request all reviews based on restaurant id
+app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));
 
 
 app.listen(port, error => {
