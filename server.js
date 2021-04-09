@@ -23,13 +23,16 @@ const closeAccount = require('./users-handler/close-account');
 
 const createRestaurant = require('./restaurants-handler/create-restaurant');
 const updateRestaurant = require('./restaurants-handler/update-restaurant');
-const createReview = require('./reviews-handler/create-review');
-const updateReview = require('./reviews-handler/update-review');
-
 const requestAllRestaurants = require('./restaurants-handler/request-all-restaurants');
 const requestRestaurantById = require('./restaurants-handler/request-restaurant-by-id');
 
+const createReview = require('./reviews-handler/create-review');
+const updateReview = require('./reviews-handler/update-review');
 const requestRestaurantReviews = require('./reviews-handler/request-restaurant-reviews');
+const requestUserReviews= require('./reviews-handler/request-user-reviews');
+const reviewHelpful = require('./reviews-handler/review-helpful');
+const reportReview = require('./reviews-handler/report-review');
+const deleteReview = require('./reviews-handler/delete-review');
 
 const app = express();
 app.use(cors());
@@ -73,23 +76,38 @@ app.post('/onrestaurant/createrestaurant', auth, createRestaurant.handleCreateRe
 // Update existing restaurant info
 app.patch('/onrestaurant/updaterestaurant', auth, updateRestaurant.handleUpdateRestaurant(knex));
 
-// Create a new review
-app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
-
-// Update an existing review
-app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
-
-// Images
-
-
 // Request all restaurants
 app.get('/restaurants', requestAllRestaurants.handleRequestAllRestaurants(knex));
 
 // Request restaurant by id
 app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(knex));
 
+// Delete restaurant
+app.delete('/onrestaurant/deleterestaurant', auth, deleteRestaurant.handleDeleteRestaurant(knex, bcrypt));
+
+
+// Create a new review
+app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
+
 // Request all reviews based on restaurant id
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));
+
+// Request all reviews based on user id
+app.get('/reviews/user', requestUserReviews.handleRequestUserReviews(knex));
+
+// Update an existing review
+app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
+
+// Images
+
+// Review helpful
+app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(knex));
+
+// Review report
+app.patch('/onreview/reportreview', auth, reportReview.handleReportReview(knex));
+
+// Delete review
+app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex, bcrypt));
 
 
 app.listen(port, error => {

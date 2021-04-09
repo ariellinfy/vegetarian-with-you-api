@@ -14,21 +14,21 @@ visit_period VARCHAR(20) NOT NULL,
 type_of_visit VARCHAR(10) NOT NULL,
 price_range float(1) NOT NULL,
 recommended_dishes text,
-helpful_user BOOLEAN NOT NULL DEFAULT false,
-helpful_record INT NOT NULL DEFAULT 0,
-report_user INT NOT NULL DEFAULT 0,
-report_record INT NOT NULL DEFAULT 0,
+user_helpful BOOLEAN NOT NULL DEFAULT false,
+helpful_count INT NOT NULL DEFAULT 0,
+user_report INT NOT NULL DEFAULT 0,
+report_count INT NOT NULL DEFAULT 0,
 report_text text,
 disclosure BOOLEAN NOT NULL,
 create_at TIMESTAMP NOT NULL,
-create_by uuid,
+review_owner uuid,
 last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
 CONSTRAINT fk_restaurant
 FOREIGN KEY(restaurant_id)
 REFERENCES restaurants (restaurant_id)
 ON DELETE CASCADE,
 CONSTRAINT fk_user
-FOREIGN KEY(create_by)
+FOREIGN KEY(review_owner)
 REFERENCES users (user_id)
 ON DELETE CASCADE
 );

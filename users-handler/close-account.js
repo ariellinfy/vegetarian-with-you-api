@@ -1,5 +1,3 @@
-const refreshToken = require('./refresh');
-
 const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
 	const { email, password } = req.body;
 

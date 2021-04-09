@@ -52,7 +52,7 @@ const handleCreateReview = (knex) => async (req, res) => {
                 recommended_dishes: recommendDish,
                 disclosure: disclosure,
                 create_at: new Date(),
-                create_by: data[0].user_id,
+                review_owner: data[0].user_id,
             })
             .returning('*')
             .then(review => {
