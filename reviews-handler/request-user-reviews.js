@@ -1,3 +1,5 @@
+const refreshToken = require('../users-handler/refresh');
+
 const handleRequestUserReviews = (knex) => async (req, res) => {
     if (req.userId) {
         try {

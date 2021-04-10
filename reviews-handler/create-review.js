@@ -2,12 +2,12 @@ const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 
 const handleCreateReview = (knex) => async (req, res) => {
-	let { restaurantId, 
+	let { restaurantId, restaurantName,
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
         disclosure } = req.body;
 
-	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
+	if (!restaurantId || !restaurantName || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
 		return res.status(400).json('incorrect form submission');
 	};
     
@@ -39,6 +39,7 @@ const handleCreateReview = (knex) => async (req, res) => {
         .then(data => {
             return knex('reviews').insert({
                 restaurant_id: restaurantId,
+                restaurant_name: restaurantName,
                 review_title: reviewTitle,
                 review_body: reviewBody,
                 food_rate: foodRate,

@@ -3,6 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS reviews (
 review_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
 restaurant_id uuid NOT NULL,
+restaurant_name VARCHAR(100) NOT NULL,
 review_title VARCHAR(100) NOT NULL,
 review_body text NOT NULL,
 food_rate float(2) NOT NULL,
@@ -23,9 +24,13 @@ disclosure BOOLEAN NOT NULL,
 create_at TIMESTAMP NOT NULL,
 review_owner uuid,
 last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
-CONSTRAINT fk_restaurant
+CONSTRAINT fk_restaurant_id
 FOREIGN KEY(restaurant_id)
 REFERENCES restaurants (restaurant_id)
+ON DELETE CASCADE,
+CONSTRAINT fk_restaurant_name
+FOREIGN KEY(restaurant_name)
+REFERENCES restaurants (restaurant_name)
 ON DELETE CASCADE,
 CONSTRAINT fk_user
 FOREIGN KEY(review_owner)
@@ -35,7 +40,7 @@ ON DELETE CASCADE
 
 CREATE TABLE IF NOT EXISTS restaurants (
 restaurant_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
-restaurant_name VARCHAR(100) UNIQUE,
+restaurant_name VARCHAR(100) UNIQUE NOT NULL,
 address text NOT NULL,
 city VARCHAR(100) NOT NULL,
 region VARCHAR(100) NOT NULL,

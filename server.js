@@ -90,7 +90,7 @@ app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));
 
 // Request all reviews based on user id
-app.get('/reviews/user', requestUserReviews.handleRequestUserReviews(knex));
+app.get('/reviews/user', auth, requestUserReviews.handleRequestUserReviews(knex));
 
 // Update an existing review
 app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
