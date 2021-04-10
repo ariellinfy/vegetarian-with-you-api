@@ -1,18 +1,22 @@
 const refreshToken = require('../users-handler/refresh');
 
 const handleReviewHelpful = (knex) => async (req, res) => {
-	const { reviewId, userHelpful, helpfulCount } = req.body;
+	const { review_id, userHelpful, helpfulCount } = req.body;
 
-	if (!reviewId){
+	if (!review_id || userHelpful){
 		return res.status(400).json('incorrect form submission');
 	};
 
     if (req.userId) {
         try {
-            await knex('reviews').where('review_id', '=', reviewId)
+            await knex('user_comments').where({review_id: review_id, user_id: req.userId})
             .update({
-                user_helpful: userHelpful,
-                helpful_count: helpfulCount
+                user_helpful: true
+            })
+
+            await knex('reviews').where('review_id', '=', review_id)
+            .update({
+                helpful_count: helpfulCount+1
             })
             .then(() => {
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);

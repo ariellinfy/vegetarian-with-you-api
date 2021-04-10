@@ -5,7 +5,7 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
         restaurantAddress, restaurantCity, restaurantRegion, restaurantCountry, restaurantPostalCode, 
         restaurantPhone, restaurantWebsite, restaurantType, restaurantCuisine,
         breakfast, brunch, lunch, dinner,
-        restaurantWifi, restaurantTakeaway, restaurantDelivery, restaurantPungent } = req.body;
+        restaurantWifi, restaurantTakeout, restaurantDelivery, restaurantPungent } = req.body;
 
 	if (!restaurantName || !restaurantAddress || !restaurantRegion || !restaurantCountry || !restaurantPhone){
 		return res.status(400).json('incorrect form submission');
@@ -31,7 +31,7 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
                 lunch: lunch,
                 dinner: dinner,
                 free_wifi: restaurantWifi,
-                takeout: restaurantTakeaway,
+                takeout: restaurantTakeout,
                 delivery: restaurantDelivery,
                 exclude_pungent: restaurantPungent,
                 overall_rate: 0,

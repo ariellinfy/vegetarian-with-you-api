@@ -1,7 +1,7 @@
 const refreshToken = require('../users-handler/refresh');
 
 const handleReportReview = (knex) => async (req, res) => {
-	const { reviewId, user_report, report_count, reportText } = req.body;
+	const { reviewId, reportText } = req.body;
 
 	if (!reviewId || !reportText.length){
 		return res.status(400).json('incorrect form submission');
@@ -9,14 +9,20 @@ const handleReportReview = (knex) => async (req, res) => {
 
     if (req.userId) {
         try {
-            await knex('reviews').select('report_text').where('review_id', '=', reviewId)
+            await knex('user_comments').select('user_report').where({review_id: review_id, user_id: req.userId})
             .then(data => {
-                console.log(data);
+                return knex('user_comments').where({review_id: review_id, user_id: req.userId})
+                .update({
+                    user_report: data[0].user_report+1
+                })
+            })
+            
+            await knex('reviews').select('report_count', 'report_text').where('review_id', '=', reviewId)
+            .then(data => {
                 return knex('reviews').where('review_id', '=', reviewId)
                 .update({
-                    user_report: user_report++,
-                    report_count: report_count++,
-                    report_text: data[0].report_text + reportText
+                    report_count: data[0].report_count+1,
+                    report_text: data[0].report_text === null ? reportText : data[0].report_text + '. ' + reportText
                 })
                 .then(() => {
                     const token = refreshToken.refresh(req.exp, req.userId, req.token);

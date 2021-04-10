@@ -19,16 +19,6 @@ const handleCreateReview = (knex) => async (req, res) => {
         return res.status(400).json('incorrect rating format');
     };
 
-    let priceId = 0;
-
-    if (price === 'cheap eats') {
-        priceId = 1;
-    } else if (price === 'mid-range') {
-        priceId = 2;
-    } else if (price === 'fine dining') {
-        priceId = 3;
-    }
-
     if (!recommendDish) {
         recommendDish = null;
     }
@@ -49,7 +39,7 @@ const handleCreateReview = (knex) => async (req, res) => {
                 overall_rate: overallRate,
                 visit_period: visitPeriod,
                 type_of_visit: visitType,
-                price_range: priceId,
+                price_range: price,
                 recommended_dishes: recommendDish,
                 disclosure: disclosure,
                 create_at: new Date(),

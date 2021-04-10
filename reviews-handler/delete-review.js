@@ -7,10 +7,10 @@ const handleDeleteReview = (bcrypt, knex) => async (req, res) => {
 		return res.status(400).json('incorrect form submission');
 	};
 
-    let isValid = false;
+    let isAuth = false;
 
     try {
-        isValid = await knex.select('email', 'hash').from('login')
+        isAuth = await knex.select('email', 'hash').from('login')
         .where('email', '=', email)
         .then(data => {
             return bcrypt.compare(password, data[0].hash);
@@ -19,7 +19,7 @@ const handleDeleteReview = (bcrypt, knex) => async (req, res) => {
         res.status(400).json('unable to verify password');
     };
 
-    if (isValid) {
+    if (isAuth) {
         try {
             await knex.select('*').from('reviews')
             .where({ review_id: reviewId })
