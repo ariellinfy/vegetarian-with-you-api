@@ -1,4 +1,4 @@
-const requestUserReviews = (knex) => async (req, res) => {
+const handleRequestUserReviews = (knex) => async (req, res) => {
     if (req.userId) {
         try {
             await knex.select('*')
@@ -22,5 +22,5 @@ const requestUserReviews = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    requestUserReviews: requestUserReviews
+    handleRequestUserReviews: handleRequestUserReviews
 };

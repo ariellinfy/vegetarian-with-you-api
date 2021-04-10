@@ -82,9 +82,6 @@ app.get('/restaurants', requestAllRestaurants.handleRequestAllRestaurants(knex))
 // Request restaurant by id
 app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(knex));
 
-// Delete restaurant
-app.delete('/onrestaurant/deleterestaurant', auth, deleteRestaurant.handleDeleteRestaurant(knex, bcrypt));
-
 
 // Create a new review
 app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
