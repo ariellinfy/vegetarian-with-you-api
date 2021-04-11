@@ -15,7 +15,8 @@ const handleUpdateRestaurant = (knex) => async (req, res) => {
         await knex.select('user_id').from('users')
         .where('user_id', '=', req.userId)
         .then(data => {
-            return knex('restaurants').where('restaurant_id', '=', restaurantId).update({
+            return knex('restaurants').where('restaurant_id', '=', restaurantId)
+            .update({
                 restaurant_name: restaurantName,
                 address: restaurantAddress,
                 city: restaurantCity,

@@ -1,5 +1,5 @@
 const handleRequestRestaurantReviews = (knex) => async (req, res) => {
-    console.log(req.query);
+    // console.log(req.query);
 
     if (req.query.restaurantId) {
         if (req.query.sortBy) {

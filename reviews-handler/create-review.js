@@ -1,5 +1,6 @@
 const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
+const createComment = require('./create-user-comments');
 
 const handleCreateReview = (knex) => async (req, res) => {
 	let { restaurantId, restaurantName,
@@ -48,6 +49,7 @@ const handleCreateReview = (knex) => async (req, res) => {
             .returning('*')
             .then(review => {
                 refreshData.refreshRestaurantData(knex, restaurantId);
+                createComment.createUserComment(knex, req.userId, review[0].review_id, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                 if (!token) {
                     res.status(400).json('token expired');

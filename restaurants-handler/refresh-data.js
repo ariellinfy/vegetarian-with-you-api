@@ -21,9 +21,9 @@ const refreshRestaurantData = async (knex, restaurantId) => {
                 review_count: data[0].review_count
             })
         })
-        .catch(err => res.status(400).json({ error: 'error updating data' }))
+        .catch(err => console.log(err, 'error updating data'))
     } catch (err) {
-        res.status(400).json(err);
+        console.log(err);
     }
 };
 

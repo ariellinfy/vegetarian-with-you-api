@@ -2,7 +2,7 @@ const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 
 const handleUpdateReview = (knex) => async (req, res) => {
-	const { reviewId, restaurantId,
+	let { reviewId, restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
         disclosure } = req.body;
@@ -26,8 +26,8 @@ const handleUpdateReview = (knex) => async (req, res) => {
     let isOwner = false;
 
     try {
-        await knex('reviews').select('create_by').where('review_id', '=', reviewId).then(data => {
-            if (data[0].create_by === req.userId) {
+        await knex('reviews').select('review_owner').where('review_id', '=', reviewId).then(data => {
+            if (data[0].review_owner === req.userId) {
                 return isOwner = true;
             } else {
                 return;

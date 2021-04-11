@@ -1,17 +1,18 @@
 const refreshToken = require('../users-handler/refresh');
 
 const handleRequestReviewsUserComments = (knex) => async (req, res) => {
-    const { restaurantId } = req.body;
+    console.log(req.query);
 
-	if (!restaurantId){
+	if (!req.query.restaurantId){
 		return res.status(400).json('incorrect form submission');
 	};
 
     try {
         await knex.select('*')
         .from('user_comments')
-        .where({restaurant_id: restaurantId, user_id: req.userId})
+        .where({ restaurant_id: req.query.restaurantId, user_id: req.userId })
         .then(data => {
+            console.log(data);
             const token = refreshToken.refresh(req.exp, req.userId, req.token);
             if (!token) {
                 res.status(400).json('token expired');
