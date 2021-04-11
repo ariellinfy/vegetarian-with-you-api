@@ -32,7 +32,7 @@ const requestRestaurantReviews = require('./reviews-handler/request-restaurant-r
 const requestUserReviews= require('./reviews-handler/request-user-reviews');
 const reviewHelpful = require('./reviews-handler/review-helpful');
 const reportReview = require('./reviews-handler/report-review');
-const requestReviewsUserComments = require('./reviews-handler/request-reviews-user-comments');
+const requestUserFeedbacks = require('./reviews-handler/request-user-feedbacks');
 const deleteReview = require('./reviews-handler/delete-review');
 
 const app = express();
@@ -104,8 +104,8 @@ app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(kne
 // Review report
 app.patch('/onreview/reportreview', auth, reportReview.handleReportReview(knex));
 
-// Request user comments for restaurant reviews
-app.get('/reviews/usercomments', auth, requestReviewsUserComments.handleRequestReviewsUserComments(knex));
+// Request user feedbacks for restaurant reviews
+app.get('/reviews/userfeedbacks', auth, requestUserFeedbacks.handleRequestUserFeedbacks(knex));
 
 // Delete review
 app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex, bcrypt));

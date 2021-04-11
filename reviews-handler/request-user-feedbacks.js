@@ -1,6 +1,6 @@
 const refreshToken = require('../users-handler/refresh');
 
-const handleRequestReviewsUserComments = (knex) => async (req, res) => {
+const handleRequestUserFeedbacks = (knex) => async (req, res) => {
     console.log(req.query);
 
 	if (!req.query.restaurantId){
@@ -9,7 +9,7 @@ const handleRequestReviewsUserComments = (knex) => async (req, res) => {
 
     try {
         await knex.select('*')
-        .from('user_comments')
+        .from('user_feedbacks')
         .where({ restaurant_id: req.query.restaurantId, user_id: req.userId })
         .then(data => {
             console.log(data);
@@ -26,5 +26,5 @@ const handleRequestReviewsUserComments = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleRequestReviewsUserComments: handleRequestReviewsUserComments
+    handleRequestUserFeedbacks: handleRequestUserFeedbacks
 };

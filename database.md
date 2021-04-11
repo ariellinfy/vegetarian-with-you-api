@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS user_comments (
-comment_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS user_feedbacks (
+feedback_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
 user_id uuid NOT NULL,
 review_id uuid NOT NULL,
 restaurant_id uuid NOT NULL,
