@@ -9,12 +9,22 @@ const handleReviewHelpful = (knex) => async (req, res) => {
 
     if (req.userId) {
         try {
-            await knex('user_feedbacks').insert({
-                user_id: req.userId,
-                review_id: reviewId,
-                restaurant_id: restaurantId,
-                user_helpful: true
-            })
+            await knex('user_feedbacks').select('user_helpful').where({restaurant_id: restaurantId, review_id: reviewId, user_id: req.userId})
+            .then(data => {
+                if (!data.length) {
+                    return knex('user_feedbacks').insert({
+                        user_id: req.userId,
+                        review_id: reviewId,
+                        restaurant_id: restaurantId,
+                        user_helpful: true
+                    });
+                } else {
+                    return knex('user_feedbacks').where({restaurant_id: restaurantId, review_id: reviewId, user_id: req.userId})
+                    .update({
+                        user_helpful: true
+                    })
+                }
+            });
 
             await knex('reviews').select('helpful_count').where({restaurant_id: restaurantId, review_id: reviewId})
             .then(data => {
