@@ -1,9 +1,9 @@
 const refreshToken = require('../users-handler/refresh');
 
 const handleReviewHelpful = (knex) => async (req, res) => {
-	const { restaurantId, review_id, userHelpful } = req.body;
+	const { restaurantId, reviewId, userHelpful } = req.body;
 
-    if (!restaurantId || !review_id || userHelpful){
+    if (!restaurantId || !reviewId || userHelpful){
 		return res.status(400).json('incorrect form submission');
 	};
 
@@ -11,14 +11,14 @@ const handleReviewHelpful = (knex) => async (req, res) => {
         try {
             await knex('user_feedbacks').insert({
                 user_id: req.userId,
-                review_id: review_id,
+                review_id: reviewId,
                 restaurant_id: restaurantId,
                 user_helpful: true
-            });
+            })
 
-            await knex('reviews').select('helpful_count').where({restaurant_id: restaurantId, review_id: review_id})
+            await knex('reviews').select('helpful_count').where({restaurant_id: restaurantId, review_id: reviewId})
             .then(data => {
-                knex('reviews').where({restaurant_id: restaurantId, review_id: review_id})
+                knex('reviews').where({restaurant_id: restaurantId, review_id: reviewId})
                 .update({
                     helpful_count: data[0].helpful_count+1
                 })

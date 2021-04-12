@@ -1,37 +1,22 @@
 const handleRequestRestaurantReviews = (knex) => async (req, res) => {
-    // console.log(req.query);
+    const parts = req.query.sortBy.split(':');
 
     if (req.query.restaurantId) {
-        if (req.query.sortBy) {
-            const parts = req.query.sortBy.split(':');
-            try {
-                await knex.select('*')
-                .from('reviews')
-                .where('restaurant_id', '=', req.query.restaurantId)
-                .orderBy(parts[0], parts[1])
-                .then(data => {
-                    return res.status(200).json({ data: data });
-                })
-                .catch(err => res.status(400).json({ error: 'unable to fetch data' }))
-            } catch (err) {
-                res.status(400).json(err);
-            }
-        } else {
-            try {
-                await knex.select('*')
-                .from('reviews')
-                .where('restaurant_id', '=', req.query.restaurantId)
-                .orderBy('last_modified', 'desc')
-                .then(data => {
-                    return res.status(200).json({ data: data });
-                })
-                .catch(err => res.status(400).json({ error: 'unable to fetch data' }))
-            } catch (err) {
-                res.status(400).json(err);
-            }
-        }   
+        try {
+            await knex('reviews').select('reviews.*', 'user_feedbacks.user_helpful')
+            .leftJoin('user_feedbacks', function() {
+                this.on('user_feedbacks.review_id', '=', 'reviews.review_id').andOn('user_feedbacks.user_report', knex.raw('?', ['-1']))
+            })
+            .orderBy(parts[0], parts[1])
+            .then(data => {
+                return res.status(200).json({ data: data });
+            })
+            .catch(err => res.status(400).json({ error: 'no user, unable to fetch data' }))
+        } catch (err) {
+            res.status(400).json(err);
+        }
     } else {
-        res.status(400).json({ error: 'restaurant id not provided' });
+        res.status(400).json({ error: 'please specify restaurant id' });
     }
 };
 

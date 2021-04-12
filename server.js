@@ -29,10 +29,10 @@ const requestRestaurantById = require('./restaurants-handler/request-restaurant-
 const createReview = require('./reviews-handler/create-review');
 const updateReview = require('./reviews-handler/update-review');
 const requestRestaurantReviews = require('./reviews-handler/request-restaurant-reviews');
+const requestRestaurantReviewsWithAuth = require('./reviews-handler/request-restaurant-reviews-with-auth');
 const requestUserReviews= require('./reviews-handler/request-user-reviews');
 const reviewHelpful = require('./reviews-handler/review-helpful');
 const reportReview = require('./reviews-handler/report-review');
-const requestUserFeedbacks = require('./reviews-handler/request-user-feedbacks');
 const deleteReview = require('./reviews-handler/delete-review');
 
 const app = express();
@@ -87,14 +87,17 @@ app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(kn
 // Create a new review
 app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
 
-// Request all reviews based on restaurant id
+// Update an existing review
+app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
+
+// Request all reviews based on restaurant id (no auth)
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));
+
+// Request all reviews based on restaurant id (with auth)
+app.get('/reviews/auth', auth, requestRestaurantReviewsWithAuth.handleRequestRestaurantReviewsWithAuth(knex));
 
 // Request all reviews based on user id
 app.get('/reviews/user', auth, requestUserReviews.handleRequestUserReviews(knex));
-
-// Update an existing review
-app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
 
 // Images
 
@@ -103,9 +106,6 @@ app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(kne
 
 // Review report
 app.patch('/onreview/reportreview', auth, reportReview.handleReportReview(knex));
-
-// Request user feedbacks for restaurant reviews
-app.get('/reviews/userfeedbacks', auth, requestUserFeedbacks.handleRequestUserFeedbacks(knex));
 
 // Delete review
 app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex, bcrypt));
