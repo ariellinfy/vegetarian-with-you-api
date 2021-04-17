@@ -11,7 +11,7 @@ const refresh = (exp, userId, token) => {
     } else {
         return null;
     }
-}
+};
 
 module.exports = {
     refresh: refresh

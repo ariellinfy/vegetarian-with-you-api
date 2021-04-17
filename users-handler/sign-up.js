@@ -4,7 +4,7 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
 	const { name, email, password } = req.body;
 	if (!name || !email || !password){
 		return res.status(400).json('incorrect form submission');
-	}
+	};
 
     const hash = await bcrypt.hash(password, 9);
     
@@ -38,12 +38,11 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
             } else {
                 return res.status(400).json({ err })
             }
-            
         })
     } catch (err) {
         res.status(400).json(err);
     }
-}
+};
 
 module.exports = {
     handleSignUp: handleSignUp

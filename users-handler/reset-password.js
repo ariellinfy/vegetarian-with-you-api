@@ -5,11 +5,11 @@ const handleResetPassword = (knex, bcrypt) => async (req, res) => {
 
     if (!email || !oldPassword || !newPassword){
 		return res.status(400).json('unable to process request, missing input data');
-	}
+	};
 
     if (oldPassword === newPassword) {
         return res.status(400).json('error, new password needs to be different than old password');
-    }
+    };
 
     let isValid = false;
 

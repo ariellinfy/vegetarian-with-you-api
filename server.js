@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
 
 const knex = require('knex')({
 	client: 'pg',
@@ -12,13 +13,40 @@ const knex = require('knex')({
 	}
   });
 
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		cb(null, './public');
+	},
+	filename: function (req, file, cb) {
+		cb(null, Date.now() + '-' + file.originalname );
+	}
+});
+
+const upload = multer({ 
+	storage: storage,
+	limits: {
+		fileSize: 1000000 // max 1MB
+	},
+	fileFilter (req, file, cb) { 
+		// if (!file.mimetype.match(/^image/)) {
+		// 	cb(new Error().message = 'incorrect file type');
+		// }
+		if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
+			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'))
+		};
+		cb(null, true);
+	  }
+});
+
 const auth = require('./users-handler/auth');
 const signUp = require('./users-handler/sign-up');
 const signIn = require('./users-handler/sign-in');
 const signOut = require('./users-handler/sign-out');
 const editProfile = require('./users-handler/edit-profile');
-const resetPassword = require('./users-handler/reset-password');
+const uploadAvatar = require('./users-handler/upload-avatar');
+const deleteAvatar = require('./users-handler/delete-avatar');
 const updateEmail = require('./users-handler/update-email');
+const resetPassword = require('./users-handler/reset-password');
 const closeAccount = require('./users-handler/close-account');
 
 const createRestaurant = require('./restaurants-handler/create-restaurant');
@@ -59,7 +87,13 @@ app.post('/users/signout', auth, signOut.handleSignOut());
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 
 // Upload/update user avatar
+// app.post('/users/uploadavatar', auth, upload.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
+app.post('/users/uploadavatar', auth, upload.single('avatar'), (req, res) => {
+	console.log(req.file);
+});
+
 // Delete user avatar
+app.delete('/users/deleteavatar', auth, deleteAvatar.handleDeleteAvatar(knex));
 
 // Update email
 app.patch('/users/updateemail', auth, updateEmail.handleUpdateEmail(knex));
@@ -100,6 +134,7 @@ app.get('/reviews/auth', auth, requestRestaurantReviewsWithAuth.handleRequestRes
 app.get('/reviews/user', auth, requestUserReviews.handleRequestUserReviews(knex));
 
 // Images
+
 
 // Review helpful
 app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(knex));

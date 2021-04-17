@@ -4,7 +4,7 @@ const handleSignIn = (knex, bcrypt) => async (req, res) => {
 	const { email, password } = req.body;
 	if (!email || !password){
 		return res.status(400).json('incorrect form submission');
-	}
+	};
 
     try {
         await knex.select('email', 'hash').from('login')
@@ -31,7 +31,7 @@ const handleSignIn = (knex, bcrypt) => async (req, res) => {
     } catch (err) {
         res.status(400).json(err);
     }
-}
+};
 
 module.exports = {
     handleSignIn: handleSignIn

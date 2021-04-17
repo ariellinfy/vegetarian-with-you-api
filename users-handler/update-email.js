@@ -5,7 +5,7 @@ const handleUpdateEmail = (knex) => async (req, res) => {
 
     if (!oldEmail || !newEmail){
 		return res.status(400).json('unable to process request, missing input data');
-	}
+	};
 
     try {
         await knex.select('*').from('login')
