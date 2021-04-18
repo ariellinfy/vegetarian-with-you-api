@@ -14,10 +14,10 @@ const knex = require('knex')({
   });
 
 const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, './public');
+	destination: (req, file, cb) => {
+		cb(null, './public/uploads/restaurants');
 	},
-	filename: function (req, file, cb) {
+	filename: (req, file, cb) => {
 		cb(null, Date.now() + '-' + file.originalname );
 	}
 });
@@ -37,6 +37,7 @@ const upload = multer({
 		cb(null, true);
 	  }
 });
+
 
 const auth = require('./users-handler/auth');
 const signUp = require('./users-handler/sign-up');
@@ -89,6 +90,7 @@ app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 // Upload/update user avatar
 // app.post('/users/uploadavatar', auth, upload.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
 app.post('/users/uploadavatar', auth, upload.single('avatar'), (req, res) => {
+	
 	console.log(req.file);
 });
 
