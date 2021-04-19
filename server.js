@@ -88,11 +88,7 @@ app.post('/users/signout', auth, signOut.handleSignOut());
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 
 // Upload/update user avatar
-// app.post('/users/uploadavatar', auth, upload.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
-app.post('/users/uploadavatar', auth, upload.single('avatar'), (req, res) => {
-	
-	console.log(req.file);
-});
+app.post('/users/uploadavatar', auth, upload.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
 
 // Delete user avatar
 app.delete('/users/deleteavatar', auth, deleteAvatar.handleDeleteAvatar(knex));
