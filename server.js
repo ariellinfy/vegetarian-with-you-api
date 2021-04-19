@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const path = require('path');
 const multer = require('multer');
 
 const knex = require('knex')({
@@ -15,10 +16,10 @@ const knex = require('knex')({
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, './public/uploads/restaurants');
+		cb(null, './public/uploads/users');
 	},
 	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' + file.originalname );
+		cb(null, file.originalname);
 	}
 });
 
@@ -37,7 +38,6 @@ const upload = multer({
 		cb(null, true);
 	  }
 });
-
 
 const auth = require('./users-handler/auth');
 const signUp = require('./users-handler/sign-up');
@@ -68,6 +68,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/users', express.static(path.join(__dirname, '/public/uploads/users')));
+app.use('/reviews', express.static(path.join(__dirname, '/public/uploads/restaurants')));
 
 const port = process.env.PORT || 5000;
 
