@@ -3,17 +3,18 @@ const fs = require('fs');
 const path = require('path');
 
 const handleDeleteAvatar = (knex) => async (req, res) => {
-    if (!req.userId){
-		return res.status(400).json('user id missing');
+    const { avatar } = req.body;
+
+    if (!req.userId || !avatar){
+		return res.status(400).json('user id or avatar url missing');
 	}
 
-    const avatarPath = path.join(__dirname, `../public/uploads/users/${req.userId}.jpg`);
-    console.log(avatarPath);
+    const avatarPath = path.join(__dirname, `../${avatar}`);
 
     fs.unlink(avatarPath, err => {
         if (err) {
-            console.error(err)
-            return
+            console.error(err);
+            return;
         }
     });
 
