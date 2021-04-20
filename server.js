@@ -68,8 +68,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/users', express.static(path.join(__dirname, '/public/uploads/users')));
-app.use('/reviews', express.static(path.join(__dirname, '/public/uploads/restaurants')));
+app.use(express.static(path.join(__dirname, '/public/uploads')));
 
 const port = process.env.PORT || 5000;
 
