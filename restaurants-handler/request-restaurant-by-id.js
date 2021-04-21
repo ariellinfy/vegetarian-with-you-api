@@ -1,5 +1,9 @@
+const refreshData = require('./refresh-data');
+
 const handleRequestRestaurantById = (knex) => async (req, res) => {
     try {
+        await refreshData.refreshRestaurantData(knex, req.params.id);
+
         await knex.select('*').from('restaurants')
         .where('restaurant_id', '=', req.params.id)
         .then(data => {

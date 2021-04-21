@@ -1,25 +1,14 @@
 const refreshToken = require('../users-handler/refresh');
+const refreshData = require('../restaurants-handler/refresh-data');
 
-const handleDeleteReview = (bcrypt, knex) => async (req, res) => {
-	const { reviewId, email, password } = req.body;
+const handleDeleteReview = (knex) => async (req, res) => {
+	const { reviewId, restaurantId, confirmDelete } = req.body;
 
-	if (!reviewId || !email || !password){
-		return res.status(400).json('incorrect form submission');
+	if (!reviewId || !restaurantId || !confirmDelete){
+		return res.status(400).json('incorrect submission form');
 	};
 
-    let isAuth = false;
-
-    try {
-        isAuth = await knex.select('email', 'hash').from('login')
-        .where('email', '=', email)
-        .then(data => {
-            return bcrypt.compare(password, data[0].hash);
-        });
-    } catch (e) {
-        res.status(400).json('unable to verify password');
-    };
-
-    if (isAuth) {
+    if (confirmDelete) {
         try {
             await knex('users').select('contributions')
             .where('user_id', '=', req.userId)
@@ -34,6 +23,7 @@ const handleDeleteReview = (bcrypt, knex) => async (req, res) => {
             .where({ review_id: reviewId })
             .del()
 			.then(() => {
+                refreshData.refreshRestaurantData(knex, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                 if (!token) {
                     res.status(400).json('token expired');
@@ -45,7 +35,7 @@ const handleDeleteReview = (bcrypt, knex) => async (req, res) => {
             res.status(400).json(err);
         }
     } else {
-        res.status(400).json('incorrect password');
+        res.status(400).json('delete not confirm');
     }
 };
 

@@ -43,6 +43,7 @@ const auth = require('./users-handler/auth');
 const signUp = require('./users-handler/sign-up');
 const signIn = require('./users-handler/sign-in');
 const signOut = require('./users-handler/sign-out');
+const requestUser = require('./users-handler/request-user');
 const editProfile = require('./users-handler/edit-profile');
 const uploadAvatar = require('./users-handler/upload-avatar');
 const deleteAvatar = require('./users-handler/delete-avatar');
@@ -68,7 +69,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '/public/uploads')));
+app.use(express.static(path.join(__dirname, '/')));
 
 const port = process.env.PORT || 5000;
 
@@ -84,6 +85,9 @@ app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 
 // User sign-out
 app.post('/users/signout', auth, signOut.handleSignOut());
+
+// Request user
+app.get('/users', auth, requestUser.handleRequestUser(knex));
 
 // Update user profile: name, location
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
@@ -142,7 +146,7 @@ app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(kne
 app.patch('/onreview/reportreview', auth, reportReview.handleReportReview(knex));
 
 // Delete review
-app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex, bcrypt));
+app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex));
 
 
 app.listen(port, error => {

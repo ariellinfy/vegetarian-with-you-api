@@ -26,9 +26,17 @@ const handleReviewHelpful = (knex) => async (req, res) => {
                 }
             });
 
+            await knex('users').select('helpful_votes').where({user_id: req.userId})
+            .then(data => {
+                return knex('users').where({user_id: req.userId})
+                .update({
+                    helpful_votes: data[0].helpful_votes+1
+                })
+            });
+
             await knex('reviews').select('helpful_count').where({restaurant_id: restaurantId, review_id: reviewId})
             .then(data => {
-                knex('reviews').where({restaurant_id: restaurantId, review_id: reviewId})
+                return knex('reviews').where({restaurant_id: restaurantId, review_id: reviewId})
                 .update({
                     helpful_count: data[0].helpful_count+1
                 })

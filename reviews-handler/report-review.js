@@ -25,6 +25,14 @@ const handleReportReview = (knex) => async (req, res) => {
                     })
                 }
             });
+
+            await knex('users').select('report_total').where({user_id: req.userId})
+            .then(data => {
+                return knex('users').where({user_id: req.userId})
+                .update({
+                    report_total: data[0].report_total+1
+                })
+            });
             
             await knex('reviews').select('report_count', 'report_text').where({restaurant_id: restaurantId, review_id: reviewId})
             .then(data => {
