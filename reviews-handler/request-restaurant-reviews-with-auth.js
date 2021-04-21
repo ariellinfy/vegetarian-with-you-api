@@ -5,10 +5,11 @@ const handleRequestRestaurantReviewsWithAuth = (knex) => async (req, res) => {
 
     if (req.query.restaurantId && req.userId) {
         try {
-            await knex('reviews').select('reviews.*', 'user_feedbacks.user_helpful')
+            await knex('reviews').select('reviews.*', 'user_feedbacks.user_helpful', 'users.public_name', 'users.avatar', 'users.contributions')
             .leftJoin('user_feedbacks', function() {
                 this.on('user_feedbacks.review_id', '=', 'reviews.review_id').andOn('user_feedbacks.user_id', knex.raw('?', [req.userId]))
             })
+            .leftJoin('users', 'reviews.review_owner', 'users.user_id')
             .orderBy(parts[0], parts[1])
             .then(data => {
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);

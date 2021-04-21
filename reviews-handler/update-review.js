@@ -1,5 +1,6 @@
 const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
+const updateContributions = require('../users-handler/contributions');
 
 const handleUpdateReview = (knex) => async (req, res) => {
 	let { reviewId, restaurantId,
@@ -57,6 +58,7 @@ const handleUpdateReview = (knex) => async (req, res) => {
             })
             .returning('*')
             .then(review => {
+                updateContributions.addContribution(knex, req.userId);
                 refreshData.refreshRestaurantData(knex, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                 if (!token) {

@@ -21,6 +21,15 @@ const handleDeleteReview = (bcrypt, knex) => async (req, res) => {
 
     if (isAuth) {
         try {
+            await knex('users').select('contributions')
+            .where('user_id', '=', req.userId)
+            .then(data => {
+                return knex('users').where('user_id', '=', req.userId)
+                .update({
+                    contributions: data[0].contributions-1
+                })
+            })
+
             await knex.select('*').from('reviews')
             .where({ review_id: reviewId })
             .del()

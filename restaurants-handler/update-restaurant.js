@@ -1,4 +1,5 @@
 const refreshToken = require('../users-handler/refresh');
+const updateContributions = require('../users-handler/contributions');
 
 const handleUpdateRestaurant = (knex) => async (req, res) => {
 	const { restaurantId, restaurantName, 
@@ -40,6 +41,7 @@ const handleUpdateRestaurant = (knex) => async (req, res) => {
             })
             .returning('*')
             .then(restaurant => {
+                updateContributions.addContribution(knex, req.userId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                     if (!token) {
                         res.status(400).json('token expired');

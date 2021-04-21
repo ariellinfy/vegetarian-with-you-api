@@ -24,7 +24,6 @@ ON DELETE CASCADE
 CREATE TABLE IF NOT EXISTS reviews (
 review_id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
 restaurant_id uuid NOT NULL,
-restaurant_name VARCHAR(100) NOT NULL,
 review_title VARCHAR(100) NOT NULL,
 review_body text NOT NULL,
 food_rate float(2) NOT NULL,
@@ -42,15 +41,11 @@ report_count INT NOT NULL DEFAULT 0,
 report_text text,
 disclosure BOOLEAN NOT NULL,
 create_at TIMESTAMP NOT NULL,
-review_owner uuid,
+review_owner uuid NOT NULL,
 last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
-CONSTRAINT fk_restaurant_id
+CONSTRAINT fk_restaurant
 FOREIGN KEY(restaurant_id)
 REFERENCES restaurants (restaurant_id)
-ON DELETE CASCADE,
-CONSTRAINT fk_restaurant_name
-FOREIGN KEY(restaurant_name)
-REFERENCES restaurants (restaurant_name)
 ON DELETE CASCADE,
 CONSTRAINT fk_user
 FOREIGN KEY(review_owner)
@@ -116,8 +111,8 @@ avatar text,
 joined TIMESTAMP NOT NULL,
 last_login TIMESTAMP NOT NULL DEFAULT NOW(),
 last_modified TIMESTAMP NOT NULL DEFAULT NOW(),
-CONSTRAINT fk_user
+CONSTRAINT fk_login
 FOREIGN KEY(email)
-REFERENCES users (email)
+REFERENCES login (email)
 ON DELETE CASCADE
 );

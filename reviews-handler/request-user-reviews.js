@@ -3,8 +3,8 @@ const refreshToken = require('../users-handler/refresh');
 const handleRequestUserReviews = (knex) => async (req, res) => {
     if (req.userId) {
         try {
-            await knex.select('review_id', 'review_title', 'restaurant_name', 'overall_rate', 'create_at', 'last_modified')
-            .from('reviews')
+            await knex('reviews').select('reviews.review_id', 'reviews.review_title', 'reviews.overall_rate', 'reviews.create_at', 'reviews.last_modified', 'restaurants.restaurant_name')
+            .leftJoin('restaurants', 'reviews.restaurant_id', 'restaurants.restaurant_id')
             .where('review_owner', '=', req.userId)
             .orderBy('last_modified', 'desc')
             .then(data => {

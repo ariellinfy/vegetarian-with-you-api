@@ -1,13 +1,14 @@
 const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
+const updateContributions = require('../users-handler/contributions');
 
 const handleCreateReview = (knex) => async (req, res) => {
-	let { restaurantId, restaurantName,
+	let { restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
         disclosure } = req.body;
 
-	if (!restaurantId || !restaurantName || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
+	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
 		return res.status(400).json('incorrect form submission');
 	};
     
@@ -21,7 +22,7 @@ const handleCreateReview = (knex) => async (req, res) => {
 
     if (!recommendDish) {
         recommendDish = null;
-    }
+    };
 
     try {
         await knex.select('user_id').from('users')
@@ -29,7 +30,6 @@ const handleCreateReview = (knex) => async (req, res) => {
         .then(data => {
             return knex('reviews').insert({
                 restaurant_id: restaurantId,
-                restaurant_name: restaurantName,
                 review_title: reviewTitle,
                 review_body: reviewBody,
                 food_rate: foodRate,
@@ -47,6 +47,7 @@ const handleCreateReview = (knex) => async (req, res) => {
             })
             .returning('*')
             .then(review => {
+                updateContributions.addContribution(knex, req.userId);
                 refreshData.refreshRestaurantData(knex, restaurantId);
                 const token = refreshToken.refresh(req.exp, req.userId, req.token);
                 if (!token) {
@@ -55,7 +56,7 @@ const handleCreateReview = (knex) => async (req, res) => {
                 return res.status(200).json({ data: review[0], token });
             })
             .catch(err => res.status(400).json({ error: 'unable to insert new data' }))
-        })
+        });
     } catch (err) {
         res.status(400).json(err);
     }
