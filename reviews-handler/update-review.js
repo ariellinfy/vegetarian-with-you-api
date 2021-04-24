@@ -3,6 +3,14 @@ const refreshData = require('../restaurants-handler/refresh-data');
 const updateContributions = require('../users-handler/contributions');
 
 const handleUpdateReview = (knex) => async (req, res) => {
+    const photoList = req.files.length ? req.files.map((photo) => {
+        return {
+            originalname: photo.originalname,
+            filename: photo.filename,
+            path: photo.path,
+        }
+    }) : [];
+
 	let { reviewId, restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
@@ -13,6 +21,10 @@ const handleUpdateReview = (knex) => async (req, res) => {
 	};
     
     let overallRate = 0;
+    foodRate = parseInt(foodRate);
+    serviceRate = parseInt(serviceRate);
+    valueRate = parseInt(valueRate);
+    atmosphereRate = parseInt(atmosphereRate);
 
     if (foodRate >= 0 && serviceRate >= 0 && valueRate >= 0 && atmosphereRate >= 0) {
         overallRate = (foodRate + serviceRate + valueRate + atmosphereRate) / 4;
@@ -20,9 +32,7 @@ const handleUpdateReview = (knex) => async (req, res) => {
         return res.status(400).json('incorrect rating format');
     };
 
-    if (!recommendDish) {
-        recommendDish = null;
-    }
+    recommendDish = recommendDish.length ? recommendDish : null;
 
     let isOwner = false;
 
@@ -40,6 +50,24 @@ const handleUpdateReview = (knex) => async (req, res) => {
 
     if (isOwner) {
         try {
+            await knex('reviews').select('photos').where('review_id', '=', reviewId)
+            .then(data => {
+                if (data[0].length) {
+                    const photoOld = data[0].map(item => path.join(__dirname, `../${item.path}`));
+                    console.log(photoOld);
+                    return photoOld.forEach(photo => {
+                        fs.unlink(photo, err => {
+                            if (err) {
+                                console.error(err);
+                                return;
+                            }
+                        });
+                    })
+                } else {
+                    return;
+                }
+            });
+
             await knex('reviews').where('review_id', '=', reviewId)
             .update({
                 review_title: reviewTitle,
@@ -53,6 +81,7 @@ const handleUpdateReview = (knex) => async (req, res) => {
                 type_of_visit: visitType,
                 price_range: price,
                 recommended_dishes: recommendDish,
+                photos: JSON.stringify(photoList),
                 disclosure: disclosure,
                 last_modified: new Date()
             })

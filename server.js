@@ -14,7 +14,7 @@ const knex = require('knex')({
 	}
   });
 
-const storage = multer.diskStorage({
+const storageAvatar = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, './public/uploads/users');
 	},
@@ -23,15 +23,40 @@ const storage = multer.diskStorage({
 	}
 });
 
-const upload = multer({ 
-	storage: storage,
+const uploadAvatarMD = multer({ 
+	storage: storageAvatar,
 	limits: {
 		fileSize: 1000000 // max 1MB
 	},
 	fileFilter (req, file, cb) { 
-		// if (!file.mimetype.match(/^image/)) {
-		// 	cb(new Error().message = 'incorrect file type');
-		// }
+		if (!file.mimetype.match(/^image/)) {
+			cb(new Error().message = 'incorrect file type');
+		}
+		if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
+			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'))
+		};
+		cb(null, true);
+	  }
+});
+
+const storagePhotos = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, './public/uploads/restaurants');
+	},
+	filename: (req, file, cb) => {
+		cb(null, Date.now() + '-' +file.originalname);
+	}
+});
+
+const uploadPhotosMD = multer({ 
+	storage: storagePhotos,
+	limits: {
+		fileSize: 3000000 // max 3MB
+	},
+	fileFilter (req, file, cb) { 
+		if (!file.mimetype.match(/^image/)) {
+			cb(new Error().message = 'incorrect file type');
+		}
 		if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
 			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'))
 		};
@@ -93,7 +118,7 @@ app.get('/users', auth, requestUser.handleRequestUser(knex));
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 
 // Upload/update user avatar
-app.post('/users/uploadavatar', auth, upload.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
+app.post('/users/uploadavatar', auth, uploadAvatarMD.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
 
 // Delete user avatar
 app.delete('/users/deleteavatar', auth, deleteAvatar.handleDeleteAvatar(knex));
@@ -122,7 +147,7 @@ app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(kn
 
 
 // Create a new review
-app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
+app.post('/onreview/createreview', auth, uploadPhotosMD.array('photos'), createReview.handleCreateReview(knex));
 
 // Update an existing review
 app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));

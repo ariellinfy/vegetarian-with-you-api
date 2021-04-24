@@ -3,6 +3,14 @@ const refreshData = require('../restaurants-handler/refresh-data');
 const updateContributions = require('../users-handler/contributions');
 
 const handleCreateReview = (knex) => async (req, res) => {
+    const photoList = req.files.map((photo) => {
+        return {
+            originalname: photo.originalname,
+            filename: photo.filename,
+            path: photo.path,
+        }
+    });
+
 	let { restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
@@ -13,6 +21,10 @@ const handleCreateReview = (knex) => async (req, res) => {
 	};
     
     let overallRate = 0;
+    foodRate = parseInt(foodRate);
+    serviceRate = parseInt(serviceRate);
+    valueRate = parseInt(valueRate);
+    atmosphereRate = parseInt(atmosphereRate);
 
     if (foodRate >= 0 && serviceRate >= 0 && valueRate >= 0 && atmosphereRate >= 0) {
         overallRate = (foodRate + serviceRate + valueRate + atmosphereRate) / 4;
@@ -20,9 +32,7 @@ const handleCreateReview = (knex) => async (req, res) => {
         return res.status(400).json('incorrect rating format');
     };
 
-    if (!recommendDish) {
-        recommendDish = null;
-    };
+    recommendDish = recommendDish.length ? recommendDish : null;
 
     try {
         await knex.select('user_id').from('users')
@@ -41,6 +51,7 @@ const handleCreateReview = (knex) => async (req, res) => {
                 type_of_visit: visitType,
                 price_range: price,
                 recommended_dishes: recommendDish,
+                photos: JSON.stringify(photoList),
                 disclosure: disclosure,
                 create_at: new Date(),
                 review_owner: data[0].user_id,
