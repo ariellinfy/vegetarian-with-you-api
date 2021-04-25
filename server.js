@@ -147,10 +147,10 @@ app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(kn
 
 
 // Create a new review
-app.post('/onreview/createreview', auth, uploadPhotosMD.array('photos'), createReview.handleCreateReview(knex));
+app.post('/onreview/createreview', auth, uploadPhotosMD.array('photoNew'), createReview.handleCreateReview(knex));
 
 // Update an existing review
-app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
+app.patch('/onreview/updatereview', auth, uploadPhotosMD.array('photoNew'), updateReview.handleUpdateReview(knex));
 
 // Request all reviews based on restaurant id (no auth)
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));

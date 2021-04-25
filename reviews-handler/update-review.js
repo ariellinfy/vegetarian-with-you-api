@@ -1,24 +1,28 @@
 const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 const updateContributions = require('../users-handler/contributions');
+const fs = require('fs');
+const path = require('path');
 
 const handleUpdateReview = (knex) => async (req, res) => {
-    const photoList = req.files.length ? req.files.map((photo) => {
-        return {
-            originalname: photo.originalname,
-            filename: photo.filename,
-            path: photo.path,
-        }
-    }) : [];
+    req.body.photoOld = JSON.parse(req.body.photoOld);
 
 	let { reviewId, restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
-        reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
+        reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, photoOld,
         disclosure } = req.body;
 
 	if (!reviewId || !restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
 		return res.status(400).json('incorrect form submission');
 	};
+
+    const photoList = req.files.length ? photoOld.concat(req.files.map((photo) => {
+        return {
+            originalname: photo.originalname,
+            filename: photo.filename,
+            path: photo.path,
+        }
+    })) : (photoOld.length ? photoOld : []);
     
     let overallRate = 0;
     foodRate = parseInt(foodRate);
@@ -52,19 +56,19 @@ const handleUpdateReview = (knex) => async (req, res) => {
         try {
             await knex('reviews').select('photos').where('review_id', '=', reviewId)
             .then(data => {
-                if (data[0].length) {
-                    const photoOld = data[0].map(item => path.join(__dirname, `../${item.path}`));
-                    console.log(photoOld);
-                    return photoOld.forEach(photo => {
-                        fs.unlink(photo, err => {
+                if (data[0].photos.length) {
+                    const photoToDelete = [
+                        ...photoOld.filter(item1 => !data[0].photos.some(item2 => item1.path === item2.path)),
+                        ...data[0].photos.filter(item1 => !photoOld.some(item2 => item1.path === item2.path))
+                    ];
+                    return photoToDelete.forEach(photo => {
+                    fs.unlink(path.join(__dirname, `../${photo.path}`), err => {
                             if (err) {
                                 console.error(err);
                                 return;
                             }
                         });
                     })
-                } else {
-                    return;
                 }
             });
 
