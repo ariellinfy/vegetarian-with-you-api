@@ -1,5 +1,7 @@
 const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
+const fs = require('fs');
+const path = require('path');
 
 const handleDeleteReview = (knex) => async (req, res) => {
 	const { reviewId, restaurantId, confirmDelete } = req.body;
@@ -17,7 +19,21 @@ const handleDeleteReview = (knex) => async (req, res) => {
                 .update({
                     contributions: data[0].contributions-1
                 })
-            })
+            });
+
+            await knex('reviews').select('photos').where('review_id', '=', reviewId)
+            .then(data => {
+                if (data[0].photos.length) {
+                    return data[0].photos.forEach(photo => {
+                    fs.unlink(path.join(__dirname, `../${photo.path}`), err => {
+                            if (err) {
+                                console.error(err);
+                                return;
+                            }
+                        });
+                    })
+                }
+            });
 
             await knex.select('*').from('reviews')
             .where({ review_id: reviewId })
