@@ -2,8 +2,9 @@ const userAuth = require('./generate-auth-token');
 
 const handleSignUp = (knex, bcrypt) => async (req, res) => {
 	const { name, email, password } = req.body;
-	if (!name || !email || !password){
-		return res.status(400).json('incorrect form submission');
+
+	if (!name || !email || !password) {
+		return res.status(400).json({ error: 'please enter valid name, email and password' });
 	};
 
     const hash = await bcrypt.hash(password, 9);
@@ -33,14 +34,14 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
             .catch(trx.rollback)
         })
         .catch(err => {
+            console.log(err)
             if (err.code === '23505') {
-                return res.status(400).json({ error: 'this email already existed, please try sign in or use another email to create new account' })
-            } else {
-                return res.status(400).json({ err })
+                return res.status(400).json({ error: 'This email already existed, please sign in or use another email to create a new account.' })
             }
         })
     } catch (err) {
-        res.status(400).json(err);
+        console.log(err);
+        return res.status(400).json({ error: 'Fail to sign up, please contact admin for further assistance.' });
     }
 };
 

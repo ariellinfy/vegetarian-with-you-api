@@ -2,9 +2,10 @@ const refreshToken = require('./refresh');
 
 const handleEditProfile = (knex) => async (req, res) => {
 	const { public_name, location } = req.body;
-	if (!public_name){
-		return res.status(400).json('please enter a valid name');
-	}
+	
+    if (!public_name) {
+		return res.status(400).json({ error: 'Please enter a valid name.' });
+	};
 
     try {
         await knex('users').where({ user_id: req.userId })
@@ -17,7 +18,7 @@ const handleEditProfile = (knex) => async (req, res) => {
         .then(user => {
             const token = refreshToken.refresh(req.exp, req.userId, req.token);
             if (!token) {
-                res.status(400).json('token expired');
+                res.status(400).json({ error: 'Token expired' });
             }
             return res.status(200).json({ user: user[0], token });
         })

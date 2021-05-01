@@ -68,7 +68,7 @@ const auth = require('./users-handler/auth');
 const signUp = require('./users-handler/sign-up');
 const signIn = require('./users-handler/sign-in');
 const signOut = require('./users-handler/sign-out');
-const requestUser = require('./users-handler/request-user');
+const checkUserSession = require('./users-handler/check-user-session');
 const editProfile = require('./users-handler/edit-profile');
 const uploadAvatar = require('./users-handler/upload-avatar');
 const deleteAvatar = require('./users-handler/delete-avatar');
@@ -112,7 +112,7 @@ app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 app.post('/users/signout', auth, signOut.handleSignOut());
 
 // Request user
-app.get('/users', auth, requestUser.handleRequestUser(knex));
+app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
 
 // Update user profile: name, location
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
