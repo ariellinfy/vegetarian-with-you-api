@@ -5,9 +5,9 @@ const path = require('path');
 const handleDeleteAvatar = (knex) => async (req, res) => {
     const { avatar } = req.body;
 
-    if (!req.userId || !avatar){
+    if (!req.userId || !avatar) {
 		return res.status(400).json('user id or avatar url missing');
-	}
+	};
 
     const avatarPath = path.join(__dirname, `../${avatar}`);
 

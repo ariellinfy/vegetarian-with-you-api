@@ -1,7 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
 const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
 	const { email, password } = req.body;
 
-    if (!email || !password){
+    if (!email || !password) {
 		return res.status(400).json('unable to process request, missing input data');
 	};
 
@@ -19,15 +22,23 @@ const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
 
     if (isValid) {
         try {
+            await knex('users').select('avatar').where({ user_id: req.userId })
+            .then(data => {
+                if (data[0]) {
+                    const avatarPath = path.join(__dirname, `../${data[0].avatar}`);
+                    fs.unlink(avatarPath, err => {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                    });
+                }
+            });
+
             await knex.select('*').from('login')
             .where({ email: email })
             .del()
-            .catch(err => res.status(400).json('unable to find user'))
-
-            await knex.select('*').from('users')
-            .where({ user_id: req.userId })
-            .del()
-			.then(() => {
+            .then(() => {
 				return res.status(200).json('successfully close account, user account deleted');
 			})
 			.catch(err => res.status(400).json('unable to delete account'))
