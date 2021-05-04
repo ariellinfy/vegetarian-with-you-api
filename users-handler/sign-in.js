@@ -30,9 +30,9 @@ const handleSignIn = (knex, bcrypt) => async (req, res) => {
             }
         })
         .catch(err => res.status(400).json({ error: `Account's up in the air, please sign up one to continue.` }))
-    } catch (err) {
-        console.log(err);
-        return res.status(400).json({ error: 'Fail to sign in, please contact admin for further assistance.' });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({ error: 'Fail to sign in, app under maintenance.' });
     }
 };
 

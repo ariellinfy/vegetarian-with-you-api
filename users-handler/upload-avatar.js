@@ -1,9 +1,7 @@
-// const refreshToken = require('./refresh');
-
 const handleUploadAvatar = (knex) => async (req, res) => {
     if (!req.file){
-		return res.status(400).json('incorrect file format');
-	}
+		return res.status(400).json({ error: 'Please select a file to upload the avatar.' });
+	};
 
     try {
         await knex('users').where({ user_id: req.userId })
@@ -13,15 +11,12 @@ const handleUploadAvatar = (knex) => async (req, res) => {
         })
         .returning('*')
         .then(user => {
-            // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-            // if (!token) {
-            //     res.status(400).json('token expired');
-            // }
-            return res.status(200).json({ data: user[0] });
+            return res.status(200).json({ user: user[0] });
         })
-        .catch(err => res.status(400).json(err))
-    } catch (err) {
-        res.status(400).json(err);
+        .catch(err => res.status(400).json({ error: 'Something wrong with fetching / updating user avatar, app under maintenance.' }))
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({ error: 'Fail to upload avatar, app under maintenance.' });
     }
 };
 

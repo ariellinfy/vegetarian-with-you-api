@@ -12,7 +12,7 @@ const knex = require('knex')({
 	  password : 'Infinite7*',
 	  database : 'vegetarian-with-you'
 	}
-  });
+});
 
 const storageAvatar = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -30,13 +30,10 @@ const uploadAvatarMD = multer({
 	},
 	fileFilter (req, file, cb) { 
 		if (!file.mimetype.match(/^image/)) {
-			cb(new Error().message = 'incorrect file type');
-		}
-		if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
-			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'))
+			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'));
 		};
 		cb(null, true);
-	  }
+	}
 });
 
 const storagePhotos = multer.diskStorage({
@@ -44,7 +41,7 @@ const storagePhotos = multer.diskStorage({
 		cb(null, './public/uploads/restaurants');
 	},
 	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' +file.originalname);
+		cb(null, Date.now() + '-' + file.originalname);
 	}
 });
 
@@ -55,16 +52,14 @@ const uploadPhotosMD = multer({
 	},
 	fileFilter (req, file, cb) { 
 		if (!file.mimetype.match(/^image/)) {
-			cb(new Error().message = 'incorrect file type');
-		}
-		if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
-			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'))
+			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'));
 		};
 		cb(null, true);
 	  }
 });
 
 const auth = require('./users-handler/auth');
+
 const checkUserSession = require('./users-handler/check-user-session');
 const refreshToken = require('./users-handler/refresh-token');
 const signUp = require('./users-handler/sign-up');
@@ -98,10 +93,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/')));
 
 const port = process.env.PORT || 5000;
-
-app.get('/', (req, res) => {
-	res.send('success');
-});
 
 // Request user
 app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
@@ -164,9 +155,6 @@ app.get('/reviews/auth', auth, requestRestaurantReviewsWithAuth.handleRequestRes
 
 // Request all reviews based on user id
 app.get('/reviews/user', auth, requestUserReviews.handleRequestUserReviews(knex));
-
-// Images
-
 
 // Review helpful
 app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(knex));

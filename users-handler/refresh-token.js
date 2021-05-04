@@ -7,9 +7,9 @@ const handleRefreshToken = () => async (req, res) => {
         const token = userAuth.token(payload);
         const exp = decodedExp.exp(token);
         return res.status(200).json({ token, exp });
-    } catch (error) {
-        console.log(err);
-        return res.status(400).json({ error: 'Fail to refresh token, , please contact admin for further assistance.' });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({ error: 'Fail to refresh token, app under maintenance.' });
     }
 };
 

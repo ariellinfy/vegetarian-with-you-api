@@ -41,9 +41,9 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
                 return res.status(400).json({ error: 'This email already existed, please sign in or use another email to create a new account.' })
             }
         })
-    } catch (err) {
-        console.log(err);
-        return res.status(400).json({ error: 'Fail to sign up, please contact admin for further assistance.' });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({ error: 'Fail to sign up, app under maintenance.' });
     }
 };
 

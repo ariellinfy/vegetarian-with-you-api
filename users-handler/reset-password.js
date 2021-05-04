@@ -1,14 +1,12 @@
-// const refreshToken = require('./refresh');
-
 const handleResetPassword = (knex, bcrypt) => async (req, res) => {
 	const { email, oldPassword, newPassword } = req.body;
 
     if (!email || !oldPassword || !newPassword){
-		return res.status(400).json('unable to process request, missing input data');
+		return res.status(400).json({ error: 'Please enter a valid password.' });
 	};
 
     if (oldPassword === newPassword) {
-        return res.status(400).json('error, new password needs to be different than old password');
+        return res.status(400).json({ error: 'New password needs to be different than the old password.' });
     };
 
     let isValid = false;
@@ -20,11 +18,11 @@ const handleResetPassword = (knex, bcrypt) => async (req, res) => {
             return bcrypt.compare(oldPassword, data[0].hash);
         });
     } catch (e) {
-        res.status(400).json('unable to verify password');
-    };
+        res.status(400).json({ error: 'Unable to verify password, app under maintenance.' });
+    }
     
-    try {
-        if (isValid){
+    if (isValid) {
+        try {
             const hash = await bcrypt.hash(newPassword, 9);
             await knex.select('*').from('login')
             .where('email', '=', email)
@@ -32,25 +30,14 @@ const handleResetPassword = (knex, bcrypt) => async (req, res) => {
                 hash: hash,
                 last_modified: new Date()
             })
-            .catch(err => res.status(400).json('unable to update password'))
-
-            await knex.select('*').from('users')
-            .where('email', '=', email)
-			.then(user => {
-                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                // if (!token) {
-                //     res.status(400).json('token expired');
-                // }
-				return res.status(200).json({ user: user[0] });
-			})
-			.catch(err => res.status(400).json('unable to get user'))
-
-        } else {
-            res.status(400).json('wrong credential');
+            .catch(err => res.status(400).json({ error: 'Unable to update password, app under maintenance.' }))
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({ error: 'Fail to reset password, app under maintenance.' });
         }
-    } catch (err) {
-        res.status(400).json(err);
-    };
+    } else {
+        return res.status(400).json({ error: 'Wrong credential, please try again.' });
+    }
 };
 
 module.exports = {

@@ -1,5 +1,5 @@
 const handleSignOut = () => async (req, res) => {
-    return res.status(200).json('successfully sign out');
+    return res.status(200).json('Successfully sign out.');
 };
 
 module.exports = {

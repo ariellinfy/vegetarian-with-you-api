@@ -9,8 +9,8 @@ const addContribution = async (knex, userId) => {
             })
         })
         .catch(err => console.log(err, 'error updating data'))
-    } catch (err) {
-        console.log(err);
+    } catch (e) {
+        console.log(e);
     }
 };
 
