@@ -1,4 +1,4 @@
-const refreshToken = require('../users-handler/refresh');
+// const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 const fs = require('fs');
 const path = require('path');
@@ -40,11 +40,11 @@ const handleDeleteReview = (knex) => async (req, res) => {
             .del()
 			.then(() => {
                 refreshData.refreshRestaurantData(knex, restaurantId);
-                const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                if (!token) {
-                    res.status(400).json('token expired');
-                }
-				return res.status(200).json(token);
+                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                // if (!token) {
+                //     res.status(400).json('token expired');
+                // }
+				return res.status(200).json();
 			})
 			.catch(err => res.status(400).json('unable to delete review'))
         } catch (err) {

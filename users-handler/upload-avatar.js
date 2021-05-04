@@ -1,4 +1,4 @@
-const refreshToken = require('./refresh');
+// const refreshToken = require('./refresh');
 
 const handleUploadAvatar = (knex) => async (req, res) => {
     if (!req.file){
@@ -13,11 +13,11 @@ const handleUploadAvatar = (knex) => async (req, res) => {
         })
         .returning('*')
         .then(user => {
-            const token = refreshToken.refresh(req.exp, req.userId, req.token);
-            if (!token) {
-                res.status(400).json('token expired');
-            }
-            return res.status(200).json({ data: user[0], token });
+            // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+            // if (!token) {
+            //     res.status(400).json('token expired');
+            // }
+            return res.status(200).json({ data: user[0] });
         })
         .catch(err => res.status(400).json(err))
     } catch (err) {

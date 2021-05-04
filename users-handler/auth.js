@@ -5,7 +5,7 @@ const auth = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
     jwt.verify(token, 'process.env.JWT_SECRET', function(err, decoded) {
         if (err) {
-            return res.status(400).json(err.message);
+            return res.status(400).json({ error: err.message });
         } else {
             req.token = token;
             req.userId = decoded.id;

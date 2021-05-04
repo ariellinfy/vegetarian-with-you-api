@@ -1,4 +1,4 @@
-const refreshToken = require('./refresh');
+// const refreshToken = require('./refresh');
 
 const handleUpdateEmail = (knex) => async (req, res) => {
 	const { oldEmail, newEmail } = req.body;
@@ -23,11 +23,11 @@ const handleUpdateEmail = (knex) => async (req, res) => {
                     last_modified: new Date()
                 })
                 .then(user => {
-                    const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                    if (!token) {
-                        res.status(400).json('token expired');
-                    }
-                    return res.status(200).json({ user: user[0], token });
+                    // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                    // if (!token) {
+                    //     res.status(400).json('token expired');
+                    // }
+                    return res.status(200).json({ user: user[0] });
                 })
             })
             .then(trx.commit)

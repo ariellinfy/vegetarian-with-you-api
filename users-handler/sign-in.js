@@ -1,4 +1,5 @@
 const userAuth = require('./generate-auth-token');
+const decodedExp = require('./decode-exp');
 
 const handleSignIn = (knex, bcrypt) => async (req, res) => {
 	const { email, password } = req.body;
@@ -21,7 +22,8 @@ const handleSignIn = (knex, bcrypt) => async (req, res) => {
                 .returning('*')
                 .then(user => {
                     const token = userAuth.token(user[0]);
-                    return res.status(200).json({ user: user[0], token });
+                    const exp = decodedExp.exp(token);
+                    return res.status(200).json({ user: user[0], token, exp });
                 })
             } else {
                 return res.status(400).json({ error: 'Wrong credentials, please double check your email and/or password.' });

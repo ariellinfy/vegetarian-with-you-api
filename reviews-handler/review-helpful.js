@@ -1,4 +1,4 @@
-const refreshToken = require('../users-handler/refresh');
+// const refreshToken = require('../users-handler/refresh');
 
 const handleReviewHelpful = (knex) => async (req, res) => {
 	const { restaurantId, reviewId, userHelpful } = req.body;
@@ -41,11 +41,11 @@ const handleReviewHelpful = (knex) => async (req, res) => {
                     helpful_count: data[0].helpful_count+1
                 })
                 .then(() => {
-                    const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                    if (!token) {
-                        res.status(400).json('token expired');
-                    }
-                    return res.status(200).json(token);
+                    // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                    // if (!token) {
+                    //     res.status(400).json('token expired');
+                    // }
+                    return res.status(200).json();
                 })
                 .catch(err => res.status(400).json({ error: 'unable to update data' }))
             })

@@ -1,4 +1,4 @@
-const refreshToken = require('../users-handler/refresh');
+// const refreshToken = require('../users-handler/refresh');
 
 const handleRequestRestaurantReviewsWithAuth = (knex) => async (req, res) => {
     const parts = req.query.sortBy.split(':');
@@ -13,11 +13,11 @@ const handleRequestRestaurantReviewsWithAuth = (knex) => async (req, res) => {
             .where('reviews.restaurant_id', '=', req.query.restaurantId)
             .orderBy(parts[0], parts[1])
             .then(data => {
-                const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                if (!token) {
-                    res.status(400).json('token expired');
-                }
-                return res.status(200).json({ data: data, token });
+                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                // if (!token) {
+                //     res.status(400).json('token expired');
+                // }
+                return res.status(200).json({ data: data });
             })
             .catch(err => res.status(400).json({ error: 'with user, unable to fetch data' }))
         } catch (err) {

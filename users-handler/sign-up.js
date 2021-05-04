@@ -1,4 +1,5 @@
 const userAuth = require('./generate-auth-token');
+const decodedExp = require('./decode-exp');
 
 const handleSignUp = (knex, bcrypt) => async (req, res) => {
 	const { name, email, password } = req.body;
@@ -27,7 +28,8 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
                 })
                 .then(user => {
                     const token = userAuth.token(user[0]);
-                    return res.status(201).json({ user: user[0], token });
+                    const exp = decodedExp.exp(token);
+                    return res.status(201).json({ user: user[0], token, exp });
                 })
             })
             .then(trx.commit)

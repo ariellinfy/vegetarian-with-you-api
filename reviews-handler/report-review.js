@@ -1,4 +1,4 @@
-const refreshToken = require('../users-handler/refresh');
+// const refreshToken = require('../users-handler/refresh');
 
 const handleReportReview = (knex) => async (req, res) => {
 	const { restaurantId, reviewId, reportText } = req.body;
@@ -42,11 +42,11 @@ const handleReportReview = (knex) => async (req, res) => {
                     report_text: data[0].report_text === null ? reportText : data[0].report_text + '. ' + reportText
                 })
                 .then(() => {
-                    const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                    if (!token) {
-                        res.status(400).json('token expired');
-                    }
-                    return res.status(200).json(token);
+                    // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                    // if (!token) {
+                    //     res.status(400).json('token expired');
+                    // }
+                    return res.status(200).json();
                 })
                 .catch(err => res.status(400).json({ error: 'unable to update data' }))
             });

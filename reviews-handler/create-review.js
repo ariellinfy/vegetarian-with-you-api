@@ -1,4 +1,4 @@
-const refreshToken = require('../users-handler/refresh');
+// const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 const updateContributions = require('../users-handler/contributions');
 
@@ -60,11 +60,11 @@ const handleCreateReview = (knex) => async (req, res) => {
             .then(review => {
                 updateContributions.addContribution(knex, req.userId);
                 refreshData.refreshRestaurantData(knex, restaurantId);
-                const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                if (!token) {
-                    res.status(400).json('token expired');
-                }
-                return res.status(200).json({ data: review[0], token });
+                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                // if (!token) {
+                //     res.status(400).json('token expired');
+                // }
+                return res.status(200).json({ data: review[0] });
             })
             .catch(err => res.status(400).json({ error: 'unable to insert new data' }))
         });

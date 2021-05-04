@@ -65,10 +65,11 @@ const uploadPhotosMD = multer({
 });
 
 const auth = require('./users-handler/auth');
+const checkUserSession = require('./users-handler/check-user-session');
+const refreshToken = require('./users-handler/refresh-token');
 const signUp = require('./users-handler/sign-up');
 const signIn = require('./users-handler/sign-in');
 const signOut = require('./users-handler/sign-out');
-const checkUserSession = require('./users-handler/check-user-session');
 const editProfile = require('./users-handler/edit-profile');
 const uploadAvatar = require('./users-handler/upload-avatar');
 const deleteAvatar = require('./users-handler/delete-avatar');
@@ -102,6 +103,12 @@ app.get('/', (req, res) => {
 	res.send('success');
 });
 
+// Request user
+app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
+
+// Refresh token
+app.get('/users/refreshtoken', auth, refreshToken.handleRefreshToken());
+
 // User sign-up / new user profile
 app.post('/users/signup', signUp.handleSignUp(knex, bcrypt));
 
@@ -110,9 +117,6 @@ app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 
 // User sign-out
 app.post('/users/signout', auth, signOut.handleSignOut());
-
-// Request user
-app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
 
 // Update user profile: name, location
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));

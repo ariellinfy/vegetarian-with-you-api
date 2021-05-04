@@ -1,4 +1,4 @@
-const refreshToken = require('./refresh');
+// const refreshToken = require('./refresh');
 
 const handleResetPassword = (knex, bcrypt) => async (req, res) => {
 	const { email, oldPassword, newPassword } = req.body;
@@ -37,11 +37,11 @@ const handleResetPassword = (knex, bcrypt) => async (req, res) => {
             await knex.select('*').from('users')
             .where('email', '=', email)
 			.then(user => {
-                const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                if (!token) {
-                    res.status(400).json('token expired');
-                }
-				return res.status(200).json({ user: user[0], token });
+                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
+                // if (!token) {
+                //     res.status(400).json('token expired');
+                // }
+				return res.status(200).json({ user: user[0] });
 			})
 			.catch(err => res.status(400).json('unable to get user'))
 
