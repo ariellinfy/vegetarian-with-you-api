@@ -30,6 +30,9 @@ const handleResetPassword = (knex, bcrypt) => async (req, res) => {
                 hash: hash,
                 last_modified: new Date()
             })
+            .then(() => {
+                return res.status(200).json('Successfully reset password')
+            })
             .catch(err => res.status(400).json({ error: 'Unable to update password, app under maintenance.' }))
         } catch (e) {
             console.log(e);

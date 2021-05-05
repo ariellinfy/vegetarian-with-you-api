@@ -5,7 +5,7 @@ const handleSignUp = (knex, bcrypt) => async (req, res) => {
 	const { name, email, password } = req.body;
 
 	if (!name || !email || !password) {
-		return res.status(400).json({ error: 'please enter valid name, email and password' });
+		return res.status(400).json({ error: 'please enter valid name, email and password.' });
 	};
 
     const hash = await bcrypt.hash(password, 9);

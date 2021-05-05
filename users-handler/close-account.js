@@ -24,7 +24,7 @@ const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
         try {
             await knex('users').select('avatar').where({ user_id: req.userId })
             .then(data => {
-                if (data[0]) {
+                if (data[0].avatar) {
                     const avatarPath = path.join(__dirname, `../${data[0].avatar}`);
                     fs.unlink(avatarPath, err => {
                         if (err) {

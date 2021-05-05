@@ -5,7 +5,7 @@ const handleDeleteAvatar = (knex) => async (req, res) => {
     const { avatar } = req.body;
 
     if (!avatar) {
-		return res.status(400).json({ error: 'Avatar url missing' });
+		return res.status(400).json({ error: 'Avatar url missing.' });
 	};
 
     try {
