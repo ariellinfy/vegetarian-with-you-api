@@ -1,15 +1,13 @@
-// const refreshToken = require('../users-handler/refresh');
 const updateContributions = require('../users-handler/contributions');
 
 const handleCreateRestaurant = (knex) => async (req, res) => {
-	const { restaurantName, 
-        restaurantAddress, restaurantCity, restaurantRegion, restaurantCountry, restaurantPostalCode, 
+	const { restaurantName, restaurantAddress, restaurantCity, restaurantRegion, restaurantCountry, restaurantPostalCode, 
         restaurantPhone, restaurantWebsite, restaurantType, restaurantCuisine,
         breakfast, brunch, lunch, dinner,
         restaurantWifi, restaurantTakeout, restaurantDelivery, restaurantPungent } = req.body;
 
 	if (!restaurantName || !restaurantAddress || !restaurantRegion || !restaurantCountry || !restaurantPhone){
-		return res.status(400).json('incorrect form submission');
+		return res.status(400).json({ error: 'Required input field missing.' });
 	};
     
     try {
@@ -49,16 +47,17 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
             .returning('*')
             .then(restaurant => {
                 updateContributions.addContribution(knex, req.userId);
-                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                //     if (!token) {
-                //         res.status(400).json('token expired');
-                //     }
-                return res.status(200).json({ data: restaurant[0] });
+                return res.status(200).json({ restaurant: restaurant[0] });
             })
-            .catch(err => res.status(400).json({ error: 'unable to insert new data' }))
+            .catch(err => {
+                if (err.code === '23505') {
+                    return res.status(400).json({ error: 'This restaurant already existed, visit explore page to find detail.' })
+                }
+                return res.status(400).json({ error: 'Something wrong with creating new restaurant data, app under maintenance.'} )})
         });
-    } catch (err) {
-        res.status(400).json(err);
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ error: 'Fail to create restaurant, app under maintenance.' });
     }
 };
 

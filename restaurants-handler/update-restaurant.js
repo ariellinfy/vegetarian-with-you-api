@@ -1,4 +1,3 @@
-// const refreshToken = require('../users-handler/refresh');
 const updateContributions = require('../users-handler/contributions');
 
 const handleUpdateRestaurant = (knex) => async (req, res) => {
@@ -9,7 +8,7 @@ const handleUpdateRestaurant = (knex) => async (req, res) => {
         restaurantWifi, restaurantTakeout, restaurantDelivery, restaurantPungent } = req.body;
 
 	if (!restaurantId || !restaurantName || !restaurantAddress || !restaurantRegion || !restaurantCountry || !restaurantPhone) {
-		return res.status(400).json('incorrect form submission');
+		return res.status(400).json({ error: 'Required input field missing.' });
 	};
     
     try {
@@ -42,16 +41,13 @@ const handleUpdateRestaurant = (knex) => async (req, res) => {
             .returning('*')
             .then(restaurant => {
                 updateContributions.addContribution(knex, req.userId);
-                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                //     if (!token) {
-                //         res.status(400).json('token expired');
-                //     }
-                return res.status(200).json({ data: restaurant[0] });
+                return res.status(200).json({ restaurant: restaurant[0] });
             })
-            .catch(err => res.status(400).json({ error: 'unable to insert new data' }))
+            .catch(err => res.status(400).json({ error: 'Something wrong with updating restaurant data, app under maintenance.' }))
         })
-    } catch (err) {
-        res.status(400).json(err);
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ error: 'Fail to update restaurant, app under maintenance.' });
     }
 };
 

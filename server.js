@@ -94,7 +94,7 @@ app.use(express.static(path.join(__dirname, '/')));
 
 const port = process.env.PORT || 5000;
 
-// Request user
+// Check user session
 app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
 
 // Refresh token
@@ -107,7 +107,7 @@ app.post('/users/signup', signUp.handleSignUp(knex, bcrypt));
 app.post('/users/signin', signIn.handleSignIn(knex, bcrypt));
 
 // User sign-out
-app.post('/users/signout', auth, signOut.handleSignOut());
+app.get('/users/signout', auth, signOut.handleSignOut());
 
 // Update user profile: name, location
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));

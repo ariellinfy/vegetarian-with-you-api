@@ -40,7 +40,7 @@ const refreshRestaurantData = async (knex, restaurantId) => {
             }
         })            
     } catch (err) {
-        console.log(err);
+        console.log('error freshing restaurant data', err);
     }
 };
 
