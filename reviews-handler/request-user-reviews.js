@@ -1,5 +1,3 @@
-// const refreshToken = require('../users-handler/refresh');
-
 const handleRequestUserReviews = (knex) => async (req, res) => {
     if (req.userId) {
         try {
@@ -8,18 +6,15 @@ const handleRequestUserReviews = (knex) => async (req, res) => {
             .where('review_owner', '=', req.userId)
             .orderBy('last_modified', 'desc')
             .then(data => {
-                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                // if (!token) {
-                //     res.status(400).json('token expired');
-                // }
-                return res.status(200).json({ data: data });
+                return res.status(200).json({ reviews: data });
             })
-            .catch(err => res.status(400).json({ error: 'unable to fetch data' }))
-        } catch (err) {
-            res.status(400).json(err);
+            .catch(err => res.status(400).json({ error: 'Unable to fetch user reviews, app under maintenance.' }))
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({ error: 'Fail to request user reviews, app under maintenance.' });
         }
     } else {
-        res.status(400).json({ error: 'authentication error' });
+        return res.status(400).json({ error: 'Missing user id, app under maintenance.' });
     }
 };
 

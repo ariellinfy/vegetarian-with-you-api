@@ -1,4 +1,3 @@
-// const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 const fs = require('fs');
 const path = require('path');
@@ -7,7 +6,7 @@ const handleDeleteReview = (knex) => async (req, res) => {
 	const { reviewId, restaurantId, confirmDelete } = req.body;
 
 	if (!reviewId || !restaurantId || !confirmDelete){
-		return res.status(400).json('incorrect submission form');
+		return res.status(400).json({ error: "Required info missing, app under maintenance." });
 	};
 
     if (confirmDelete) {
@@ -33,25 +32,23 @@ const handleDeleteReview = (knex) => async (req, res) => {
                         });
                     })
                 }
-            });
+            })
+            .catch(err => res.status(400).json({ error: 'Error removing stored photos, app under maintenance.' }))
 
             await knex.select('*').from('reviews')
             .where({ review_id: reviewId })
             .del()
 			.then(() => {
                 refreshData.refreshRestaurantData(knex, restaurantId);
-                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                // if (!token) {
-                //     res.status(400).json('token expired');
-                // }
-				return res.status(200).json();
+				return res.status(200).json('Delete review success.');
 			})
-			.catch(err => res.status(400).json('unable to delete review'))
-        } catch (err) {
-            res.status(400).json(err);
+			.catch(err => res.status(400).json({ error: 'Unable to delete review, app under maintenance.' }))
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({ error: 'Fail to delete review, app under maintenance.' });
         }
     } else {
-        res.status(400).json('delete not confirm');
+        return res.status(400).json({ error: "Confirmation missing, please confirm delete to proceed, app under maintenance." });
     }
 };
 

@@ -52,7 +52,7 @@ const uploadPhotosMD = multer({
 	},
 	fileFilter (req, file, cb) { 
 		if (!file.mimetype.match(/^image/)) {
-			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'));
+			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg, png or svg.'));
 		};
 		cb(null, true);
 	  }

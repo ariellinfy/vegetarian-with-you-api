@@ -1,4 +1,3 @@
-// const refreshToken = require('../users-handler/refresh');
 const refreshData = require('../restaurants-handler/refresh-data');
 const updateContributions = require('../users-handler/contributions');
 
@@ -17,9 +16,9 @@ const handleCreateReview = (knex) => async (req, res) => {
         disclosure } = req.body;
 
 	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
-		return res.status(400).json('incorrect form submission');
+		return res.status(400).json({ error: 'Required input field missing, app under maintenance.' });
 	};
-    
+
     let overallRate = 0;
     foodRate = parseInt(foodRate);
     serviceRate = parseInt(serviceRate);
@@ -29,7 +28,7 @@ const handleCreateReview = (knex) => async (req, res) => {
     if (foodRate >= 0 && serviceRate >= 0 && valueRate >= 0 && atmosphereRate >= 0) {
         overallRate = (foodRate + serviceRate + valueRate + atmosphereRate) / 4;
     } else {
-        return res.status(400).json('incorrect rating format');
+        return res.status(400).json({ error: 'Incorrect rating formats, app under maintenance.' });
     };
 
     recommendDish = recommendDish.length ? recommendDish : null;
@@ -60,16 +59,13 @@ const handleCreateReview = (knex) => async (req, res) => {
             .then(review => {
                 updateContributions.addContribution(knex, req.userId);
                 refreshData.refreshRestaurantData(knex, restaurantId);
-                // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                // if (!token) {
-                //     res.status(400).json('token expired');
-                // }
-                return res.status(200).json({ data: review[0] });
+                return res.status(200).json({ review: review[0] });
             })
-            .catch(err => res.status(400).json({ error: 'unable to insert new data' }))
+            .catch(err => res.status(400).json({ error: 'Unable to insert new review, app under maintenance.' }))
         });
-    } catch (err) {
-        res.status(400).json(err);
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json({ error: 'Fail to create review, app under maintenance.' });
     }
 };
 

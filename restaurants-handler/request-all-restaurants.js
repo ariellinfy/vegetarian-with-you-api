@@ -26,7 +26,9 @@ const handleRequestAllRestaurants = (knex) => async (req, res) => {
         .orderBy(parts[0], parts[1])
         .then(data => {
             data = data.map(restaurant => {
-                restaurant['photos'] = photoSummary[restaurant.restaurant_id];
+                if (Object.keys(photoSummary).length && photoSummary[restaurant.restaurant_id].length) {
+                    restaurant['photos'] = photoSummary[restaurant.restaurant_id];
+                };                
                 return restaurant;
             });
             return res.status(200).json({ restaurants: data });

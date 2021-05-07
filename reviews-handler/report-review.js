@@ -1,10 +1,8 @@
-// const refreshToken = require('../users-handler/refresh');
-
 const handleReportReview = (knex) => async (req, res) => {
 	const { restaurantId, reviewId, reportText } = req.body;
 
 	if (!restaurantId || !reviewId || !reportText.length){
-		return res.status(400).json('incorrect form submission');
+		return res.status(400).json({ error: "Required info missing, app under maintenance." });
 	};
 
     if (req.userId) {
@@ -42,19 +40,16 @@ const handleReportReview = (knex) => async (req, res) => {
                     report_text: data[0].report_text === null ? reportText : data[0].report_text + '. ' + reportText
                 })
                 .then(() => {
-                    // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                    // if (!token) {
-                    //     res.status(400).json('token expired');
-                    // }
-                    return res.status(200).json();
+                    return res.status(200).json('Report review success.');
                 })
-                .catch(err => res.status(400).json({ error: 'unable to update data' }))
+                .catch(err => res.status(400).json({ error: 'Unable to report review, app under maintenance.' }))
             });
-        } catch (err) {
-            res.status(400).json(err);
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({ error: 'Fail to report review, app under maintenance.' });
         }
     } else {
-        res.status(400).json("incorrect authentication, please sign in to report");
+        return res.status(400).json({ error: "Auth missing, please sign in to report, app under maintenance." });
     }
 };
 

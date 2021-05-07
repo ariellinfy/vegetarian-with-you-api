@@ -1,10 +1,8 @@
-// const refreshToken = require('../users-handler/refresh');
-
 const handleReviewHelpful = (knex) => async (req, res) => {
 	const { restaurantId, reviewId, userHelpful } = req.body;
 
-    if (!restaurantId || !reviewId || userHelpful){
-		return res.status(400).json('incorrect form submission');
+    if (!restaurantId || !reviewId || userHelpful) {
+		return res.status(400).json({ error: "Required info missing, app under maintenance." });
 	};
 
     if (req.userId) {
@@ -41,19 +39,16 @@ const handleReviewHelpful = (knex) => async (req, res) => {
                     helpful_count: data[0].helpful_count+1
                 })
                 .then(() => {
-                    // const token = refreshToken.refresh(req.exp, req.userId, req.token);
-                    // if (!token) {
-                    //     res.status(400).json('token expired');
-                    // }
-                    return res.status(200).json();
+                    return res.status(200).json('Helpful vote success.');
                 })
-                .catch(err => res.status(400).json({ error: 'unable to update data' }))
+                .catch(err => res.status(400).json({ error: 'Unable to update helpful vote, app under maintenance.' }))
             })
-        } catch (err) {
-            res.status(400).json(err);
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({ error: 'Fail to update review vote, app under maintenance.' });
         }
     } else {
-        res.status(400).json("incorrect authentication, please sign in to vote");
+        return res.status(400).json({ error: "Auth missing, please sign in to vote, app under maintenance." });
     }
 };
 

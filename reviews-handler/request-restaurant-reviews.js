@@ -11,14 +11,15 @@ const handleRequestRestaurantReviews = (knex) => async (req, res) => {
             .where('reviews.restaurant_id', '=', req.query.restaurantId)
             .orderBy(parts[0], parts[1])
             .then(data => {
-                return res.status(200).json({ data: data });
+                return res.status(200).json({ reviews: data });
             })
-            .catch(err => res.status(400).json({ error: 'no user, unable to fetch data' }))
-        } catch (err) {
-            res.status(400).json(err);
+            .catch(err => res.status(400).json({ error: 'Unable to fetch reviews, app under maintenance.' }))
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({ error: 'Fail to request reviews, app under maintenance.' });
         }
     } else {
-        res.status(400).json({ error: 'please specify restaurant id' });
+        return res.status(400).json({ error: 'Query missing restaurant id, app under maintenance.' });
     }
 };
 
