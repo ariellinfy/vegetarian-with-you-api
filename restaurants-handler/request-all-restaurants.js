@@ -25,12 +25,14 @@ const handleRequestAllRestaurants = (knex) => async (req, res) => {
         .select('restaurant_id', 'restaurant_name', 'address', 'city', 'region', 'country', 'postal_code', 'type', 'cuisine', 'price_range', 'overall_rate', 'review_count')
         .orderBy(parts[0], parts[1])
         .then(data => {
-            data = data.map(restaurant => {
-                if (Object.keys(photoSummary).length && photoSummary[restaurant.restaurant_id].length) {
-                    restaurant['photos'] = photoSummary[restaurant.restaurant_id];
-                };                
-                return restaurant;
-            });
+            if (Object.keys(photoSummary).length) {
+                data = data.map(restaurant => {
+                    if (photoSummary[restaurant.restaurant_id]) {
+                        restaurant['photos'] = photoSummary[restaurant.restaurant_id];
+                    };            
+                    return restaurant;
+                });
+            };
             return res.status(200).json({ restaurants: data });
         })
         .catch(err => res.status(400).json({ error: 'Something wrong with fetching/mapping restaurants, app under maintenance.' }))
