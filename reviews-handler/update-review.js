@@ -1,5 +1,4 @@
 const refreshData = require('../restaurants-handler/refresh-data');
-const updateContributions = require('../users-handler/contributions');
 const fs = require('fs');
 const path = require('path');
 
@@ -91,7 +90,6 @@ const handleUpdateReview = (knex) => async (req, res) => {
             })
             .returning('*')
             .then(review => {
-                updateContributions.addContribution(knex, req.userId);
                 refreshData.refreshRestaurantData(knex, restaurantId);
                 return res.status(200).json({ review: review[0] });
             })
