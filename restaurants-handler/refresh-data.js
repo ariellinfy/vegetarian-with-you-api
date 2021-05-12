@@ -45,5 +45,5 @@ const refreshRestaurantData = async (knex, restaurantId) => {
 };
 
 module.exports = {
-    refreshRestaurantData: refreshRestaurantData
+    refreshRestaurantData
 };

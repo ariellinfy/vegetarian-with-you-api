@@ -53,5 +53,5 @@ const handleReviewHelpful = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleReviewHelpful: handleReviewHelpful
+    handleReviewHelpful
 };

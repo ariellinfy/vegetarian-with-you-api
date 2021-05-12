@@ -104,5 +104,5 @@ const handleUpdateReview = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleUpdateReview: handleUpdateReview
+    handleUpdateReview
 };

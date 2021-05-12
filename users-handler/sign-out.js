@@ -3,5 +3,5 @@ const handleSignOut = () => async (req, res) => {
 };
 
 module.exports = {
-    handleSignOut: handleSignOut
+    handleSignOut
 };

@@ -16,5 +16,5 @@ const handleCheckUserSession = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleCheckUserSession: handleCheckUserSession
+    handleCheckUserSession
 };

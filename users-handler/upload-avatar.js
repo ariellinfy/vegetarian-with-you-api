@@ -21,5 +21,5 @@ const handleUploadAvatar = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleUploadAvatar: handleUploadAvatar
+    handleUploadAvatar
 };

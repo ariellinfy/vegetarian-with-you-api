@@ -52,5 +52,5 @@ const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
 };
 
 module.exports = {
-    handleCloseAccount: handleCloseAccount
+    handleCloseAccount
 };

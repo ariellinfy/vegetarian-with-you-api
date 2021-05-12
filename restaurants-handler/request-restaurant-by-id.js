@@ -29,5 +29,5 @@ const handleRequestRestaurantById = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleRequestRestaurantById: handleRequestRestaurantById
+    handleRequestRestaurantById
 };

@@ -24,5 +24,5 @@ const handleRequestRestaurantReviewsWithAuth = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleRequestRestaurantReviewsWithAuth: handleRequestRestaurantReviewsWithAuth
+    handleRequestRestaurantReviewsWithAuth
 };

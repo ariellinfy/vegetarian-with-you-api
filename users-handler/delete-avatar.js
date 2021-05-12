@@ -35,5 +35,5 @@ const handleDeleteAvatar = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleDeleteAvatar: handleDeleteAvatar
+    handleDeleteAvatar
 };

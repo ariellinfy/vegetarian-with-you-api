@@ -62,5 +62,5 @@ const handleCreateRestaurant = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleCreateRestaurant: handleCreateRestaurant
+    handleCreateRestaurant
 };

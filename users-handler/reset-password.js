@@ -44,5 +44,5 @@ const handleResetPassword = (knex, bcrypt) => async (req, res) => {
 };
 
 module.exports = {
-    handleResetPassword: handleResetPassword
+    handleResetPassword
 };

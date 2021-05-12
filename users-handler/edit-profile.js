@@ -24,5 +24,5 @@ const handleEditProfile = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleEditProfile: handleEditProfile
+    handleEditProfile
 };

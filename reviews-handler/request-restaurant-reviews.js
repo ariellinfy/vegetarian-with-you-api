@@ -24,5 +24,5 @@ const handleRequestRestaurantReviews = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleRequestRestaurantReviews: handleRequestRestaurantReviews
+    handleRequestRestaurantReviews
 };

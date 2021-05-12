@@ -53,5 +53,5 @@ const handleDeleteReview = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleDeleteReview: handleDeleteReview
+    handleDeleteReview
 };

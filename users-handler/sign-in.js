@@ -37,5 +37,5 @@ const handleSignIn = (knex, bcrypt) => async (req, res) => {
 };
 
 module.exports = {
-    handleSignIn: handleSignIn
+    handleSignIn
 };

@@ -15,5 +15,5 @@ const addContribution = async (knex, userId) => {
 };
 
 module.exports = {
-    addContribution: addContribution
+    addContribution
 };

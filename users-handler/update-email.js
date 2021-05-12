@@ -35,5 +35,5 @@ const handleUpdateEmail = (knex) => async (req, res) => {
 };
 
 module.exports = {
-    handleUpdateEmail: handleUpdateEmail
+    handleUpdateEmail
 };
