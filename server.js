@@ -93,6 +93,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/')));
 
 const port = process.env.PORT || 5000;
+app.get('/', (req, res) => res.send('success'));
 
 // Check user session
 app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
