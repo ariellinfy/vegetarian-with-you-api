@@ -23,10 +23,10 @@ const handleUpdateReview = (knex) => async (req, res) => {
     })) : (photoOld.length ? photoOld : []);
 
     let overallRate = 0;
-    foodRate = parseInt(foodRate);
-    serviceRate = parseInt(serviceRate);
-    valueRate = parseInt(valueRate);
-    atmosphereRate = parseInt(atmosphereRate);
+    foodRate = parseFloat(foodRate);
+    serviceRate = parseFloat(serviceRate);
+    valueRate = parseFloat(valueRate);
+    atmosphereRate = parseFloat(atmosphereRate);
 
     if (foodRate >= 0 && serviceRate >= 0 && valueRate >= 0 && atmosphereRate >= 0) {
         overallRate = (foodRate + serviceRate + valueRate + atmosphereRate) / 4;
