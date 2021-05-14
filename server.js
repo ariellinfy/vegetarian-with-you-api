@@ -4,17 +4,13 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const multer = require('multer');
 
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const knex = require('knex')({
 	client: 'pg',
 	connection: {
-		// connectionString: process.env.DATABASE_URL,
-		// ssl: true,
-		host : '127.0.0.1',
-	  	user : 'postgres',
-	  	password : 'Infinite7*',
-	  	database : 'vegetarian-with-you'
+		connectionString: process.env.DATABASE_URL,
+		ssl: true,
 	}
 });
 
