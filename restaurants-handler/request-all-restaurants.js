@@ -27,7 +27,7 @@ const handleRequestAllRestaurants = (knex) => async (req, res) => {
         .then(data => {
             if (Object.keys(photoSummary).length) {
                 data = data.map(restaurant => {
-                    if (photoSummary[restaurant.restaurant_id]) {
+                    if (photoSummary[restaurant.restaurant_id].length) {
                         restaurant['photos'] = photoSummary[restaurant.restaurant_id];
                     };            
                     return restaurant;
