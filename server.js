@@ -64,6 +64,7 @@ const uploadPhotosMD = multer({
 
 const auth = require('./users-handler/auth');
 
+const generateSignature = require('./users-handler/generate-signature');
 const checkUserSession = require('./users-handler/check-user-session');
 const refreshToken = require('./users-handler/refresh-token');
 const signUp = require('./users-handler/sign-up');
@@ -98,6 +99,9 @@ app.use(express.static(path.join(__dirname, '/')));
 
 const port = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('success'));
+
+// Generate signature
+app.post('/users/generatesignature', auth, generateSignature.handleGenerateSignature());
 
 // Check user session
 app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));
