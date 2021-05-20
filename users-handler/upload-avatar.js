@@ -1,7 +1,7 @@
 const handleUploadAvatar = (knex) => async (req, res) => {
     const { uploadAvatar } = req.body;
 
-    if (!uploadAvatar){
+    if (!uploadAvatar.secure_url){
 		return res.status(400).json({ error: 'Please select a file to upload the avatar.' });
 	};
 
