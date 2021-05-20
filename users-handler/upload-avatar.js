@@ -1,12 +1,14 @@
 const handleUploadAvatar = (knex) => async (req, res) => {
-    if (!req.file){
+    const { uploadAvatar } = req.body;
+
+    if (!uploadAvatar){
 		return res.status(400).json({ error: 'Please select a file to upload the avatar.' });
 	};
 
     try {
         await knex('users').where({ user_id: req.userId })
         .update({
-            avatar: req.file.path,
+            avatar: uploadAvatar,
             last_modified: new Date()
         })
         .returning('*')

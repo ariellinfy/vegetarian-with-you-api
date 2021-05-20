@@ -1,8 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const path = require('path');
-const multer = require('multer');
 
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
@@ -16,50 +14,6 @@ const knex = require('knex')({
 	  	password : 'Infinite7*',
 	  	database : 'vegetarian-with-you'
 	}
-});
-
-const storageAvatar = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, './public/uploads/users');
-	},
-	filename: (req, file, cb) => {
-		cb(null, file.originalname);
-	}
-});
-
-const uploadAvatarMD = multer({ 
-	storage: storageAvatar,
-	limits: {
-		fileSize: 1000000 // max 1MB
-	},
-	fileFilter (req, file, cb) { 
-		if (!file.mimetype.match(/^image/)) {
-			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg or png.'));
-		};
-		cb(null, true);
-	}
-});
-
-const storagePhotos = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, './public/uploads/restaurants');
-	},
-	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' + file.originalname);
-	}
-});
-
-const uploadPhotosMD = multer({ 
-	storage: storagePhotos,
-	limits: {
-		fileSize: 3000000 // max 3MB
-	},
-	fileFilter (req, file, cb) { 
-		if (!file.mimetype.match(/^image/)) {
-			return cb(new Error('Please upload a valid photo. Format should be one of: jpg, jpeg, png or svg.'));
-		};
-		cb(null, true);
-	  }
 });
 
 const auth = require('./users-handler/auth');
@@ -95,7 +49,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '/')));
 
 const port = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('success'));
@@ -122,7 +75,7 @@ app.get('/users/signout', auth, signOut.handleSignOut());
 app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 
 // Upload/update user avatar
-app.post('/users/uploadavatar', auth, uploadAvatarMD.single('avatar'), uploadAvatar.handleUploadAvatar(knex));
+app.post('/users/uploadavatar', auth, uploadAvatar.handleUploadAvatar(knex));
 
 // Delete user avatar
 app.delete('/users/deleteavatar', auth, deleteAvatar.handleDeleteAvatar(knex));
@@ -151,10 +104,10 @@ app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(kn
 
 
 // Create a new review
-app.post('/onreview/createreview', auth, uploadPhotosMD.array('photoNew'), createReview.handleCreateReview(knex));
+app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
 
 // Update an existing review
-app.patch('/onreview/updatereview', auth, uploadPhotosMD.array('photoNew'), updateReview.handleUpdateReview(knex));
+app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
 
 // Request all reviews based on restaurant id (no auth)
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));

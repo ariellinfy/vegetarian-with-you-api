@@ -1,6 +1,3 @@
-const fs = require('fs');
-const path = require('path');
-
 const handleDeleteAvatar = (knex) => async (req, res) => {
     const { avatar } = req.body;
 
@@ -9,15 +6,6 @@ const handleDeleteAvatar = (knex) => async (req, res) => {
 	};
 
     try {
-        const avatarPath = path.join(__dirname, `../${avatar}`);
-
-        fs.unlink(avatarPath, err => {
-            if (err) {
-                console.log(err);
-                return res.status(400).json({ error: 'Fail to delete server stored avatar, app under maintenance.' });
-            }
-        }); 
-
         await knex('users').where({ user_id: req.userId })
         .update({
             avatar: null,
