@@ -2,28 +2,18 @@ const refreshData = require('../restaurants-handler/refresh-data');
 const updateContributions = require('../users-handler/contributions');
 
 const handleCreateReview = (knex) => async (req, res) => {
-    const photoList = req.files.map((photo) => {
-        return {
-            originalname: photo.originalname,
-            filename: photo.filename,
-            path: photo.path,
-        }
-    });
-
 	let { restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
-        reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, 
+        reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, photos,
         disclosure } = req.body;
 
-	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure){
+        console.log(req.body)
+
+	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure) {
 		return res.status(400).json({ error: 'Required input field missing, app under maintenance.' });
 	};
 
     let overallRate = 0;
-    foodRate = parseFloat(foodRate);
-    serviceRate = parseFloat(serviceRate);
-    valueRate = parseFloat(valueRate);
-    atmosphereRate = parseFloat(atmosphereRate);
 
     if (foodRate >= 0 && serviceRate >= 0 && valueRate >= 0 && atmosphereRate >= 0) {
         overallRate = (foodRate + serviceRate + valueRate + atmosphereRate) / 4;
@@ -31,6 +21,7 @@ const handleCreateReview = (knex) => async (req, res) => {
         return res.status(400).json({ error: 'Incorrect rating formats, app under maintenance.' });
     };
 
+    price = parseInt(price);
     recommendDish = recommendDish.length ? recommendDish : null;
 
     try {
@@ -50,7 +41,7 @@ const handleCreateReview = (knex) => async (req, res) => {
                 type_of_visit: visitType,
                 price_range: price,
                 recommended_dishes: recommendDish,
-                photos: JSON.stringify(photoList),
+                photos: JSON.stringify(photos),
                 disclosure: disclosure,
                 create_at: new Date(),
                 review_owner: data[0].user_id,
