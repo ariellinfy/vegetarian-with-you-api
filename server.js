@@ -38,6 +38,7 @@ const requestRestaurantById = require('./restaurants-handler/request-restaurant-
 
 const createReview = require('./reviews-handler/create-review');
 const updateReview = require('./reviews-handler/update-review');
+const deletePhoto = require('./reviews-handler/delete-photo');
 const requestRestaurantReviews = require('./reviews-handler/request-restaurant-reviews');
 const requestRestaurantReviewsWithAuth = require('./reviews-handler/request-restaurant-reviews-with-auth');
 const requestUserReviews= require('./reviews-handler/request-user-reviews');
@@ -108,6 +109,9 @@ app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
 
 // Update an existing review
 app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
+
+// Delete photo
+app.delete('/onreview/deletephoto', auth, deletePhoto.handleDeletePhoto());
 
 // Request all reviews based on restaurant id (no auth)
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));

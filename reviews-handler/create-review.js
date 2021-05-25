@@ -7,8 +7,6 @@ const handleCreateReview = (knex) => async (req, res) => {
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, photos,
         disclosure } = req.body;
 
-        console.log(req.body)
-
 	if (!restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure) {
 		return res.status(400).json({ error: 'Required input field missing, app under maintenance.' });
 	};

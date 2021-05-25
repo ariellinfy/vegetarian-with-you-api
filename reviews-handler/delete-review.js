@@ -1,6 +1,5 @@
 const refreshData = require('../restaurants-handler/refresh-data');
-const fs = require('fs');
-const path = require('path');
+const cloudinary = require('cloudinary').v2;
 
 const handleDeleteReview = (knex) => async (req, res) => {
 	const { reviewId, restaurantId, confirmDelete } = req.body;
@@ -8,6 +7,12 @@ const handleDeleteReview = (knex) => async (req, res) => {
 	if (!reviewId || !restaurantId || !confirmDelete){
 		return res.status(400).json({ error: "Required info missing, app under maintenance." });
 	};
+
+    cloudinary.config({ 
+        cloud_name: 'alinfy', 
+        api_key: '225325956632848', 
+        api_secret: 'pNuy4D20wzTqjorV1y47ms_dKok' 
+    });
 
     if (confirmDelete) {
         try {
@@ -24,14 +29,19 @@ const handleDeleteReview = (knex) => async (req, res) => {
             .then(data => {
                 if (data[0].photos.length) {
                     return data[0].photos.forEach(photo => {
-                    fs.unlink(path.join(__dirname, `../${photo.path}`), err => {
-                            if (err) {
-                                console.error(err);
+                        cloudinary.uploader.destroy(photo.public_id, invalidate=true, function(error, result) {
+                            if (error) {
+                                return res.status(400).json({ error: 'Fail to remove cloudinary photo, app under maintenance.' });
+                            };
+                            if (result.result === 'not found') {
+                                return res.status(400).json({ error: 'Cloudinary photo not found, app under maintenance.' });
+                            };
+                            if (result.result === 'ok') {
                                 return;
-                            }
-                        });
-                    })
-                }
+                            };
+                        })
+                    }
+                )}
             })
             .catch(err => res.status(400).json({ error: 'Error removing stored photos, app under maintenance.' }))
 
@@ -40,7 +50,7 @@ const handleDeleteReview = (knex) => async (req, res) => {
             .del()
 			.then(() => {
                 refreshData.refreshRestaurantData(knex, restaurantId);
-				return res.status(200).json('Delete review success.');
+				return res.status(200).json({ status: 'Delete review success.' });
 			})
 			.catch(err => res.status(400).json({ error: 'Unable to delete review, app under maintenance.' }))
         } catch (e) {
