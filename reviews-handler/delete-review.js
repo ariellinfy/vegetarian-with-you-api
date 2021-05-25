@@ -10,8 +10,8 @@ const handleDeleteReview = (knex) => async (req, res) => {
 
     cloudinary.config({ 
         cloud_name: 'alinfy', 
-        api_key: '225325956632848', 
-        api_secret: 'pNuy4D20wzTqjorV1y47ms_dKok' 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET
     });
 
     if (confirmDelete) {

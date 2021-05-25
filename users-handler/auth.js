@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
-    jwt.verify(token, 'process.env.JWT_SECRET', function(err, decoded) {
+    jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
         if (err) {
             return res.status(400).json({ error: err.message });
         } else {

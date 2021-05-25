@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const cloudinary = require('cloudinary').v2;
 
 const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
 	const { email, password } = req.body;
@@ -7,6 +6,12 @@ const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
     if (!email || !password) {
 		return res.status(400).json({ error: 'Unable to process request, missing input data.' });
 	};
+    
+    cloudinary.config({ 
+        cloud_name: 'alinfy', 
+        api_key: process.env.CLOUDINARY_API_KEY, 
+        api_secret: process.env.CLOUDINARY_API_SECRET
+    });
 
     let isValid = false;
 
@@ -25,13 +30,17 @@ const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
             await knex('users').select('avatar').where({ user_id: req.userId })
             .then(data => {
                 if (data[0].avatar) {
-                    const avatarPath = path.join(__dirname, `../${data[0].avatar}`);
-                    fs.unlink(avatarPath, err => {
-                        if (err) {
-                            console.log(err);
-                            return res.status(400).json({ error: 'Fail to delete server stored avatar, app under maintenance.' });
-                        }
-                    });
+                    cloudinary.uploader.destroy(data[0].avatar.public_id, invalidate=true, function(error, result) {
+                        if (error) {
+                            return res.status(400).json({ error: 'Fail to remove cloudinary avatar, app under maintenance.' });
+                        };
+                        if (result.result === 'not found') {
+                            return res.status(400).json({ error: 'Cloudinary avatar not found, app under maintenance.' });
+                        };
+                        if (result.result === 'ok') {
+                            return;
+                        };
+                    })
                 }
             });
 
