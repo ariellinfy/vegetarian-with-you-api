@@ -1,17 +1,9 @@
-const cloudinary = require('cloudinary').v2;
-
-const handleDeleteAvatar = (knex) => (req, res) => {
+const handleDeleteAvatar = (knex, cloudinary) => (req, res) => {
     const { avatar } = req.body;
 
     if (!avatar.public_id) {
 		return res.status(400).json({ error: 'Avatar url missing.' });
 	};
-
-    cloudinary.config({ 
-        cloud_name: 'alinfy', 
-        api_key: process.env.CLOUDINARY_API_KEY, 
-        api_secret: process.env.CLOUDINARY_API_SECRET
-    });
 
     cloudinary.uploader.destroy(avatar.public_id, invalidate=true, function(error, result) {
         if (error) {

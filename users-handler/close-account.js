@@ -1,18 +1,10 @@
-const cloudinary = require('cloudinary').v2;
-
-const handleCloseAccount = (knex, bcrypt) => async (req, res) => {
+const handleCloseAccount = (knex, bcrypt, cloudinary) => async (req, res) => {
 	const { email, password } = req.body;
 
     if (!email || !password) {
 		return res.status(400).json({ error: 'Unable to process request, missing input data.' });
 	};
     
-    cloudinary.config({ 
-        cloud_name: 'alinfy', 
-        api_key: process.env.CLOUDINARY_API_KEY, 
-        api_secret: process.env.CLOUDINARY_API_SECRET
-    });
-
     let isValid = false;
 
     try {

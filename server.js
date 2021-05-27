@@ -1,15 +1,26 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const cloudinary = require('cloudinary').v2;
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const knex = require('knex')({
 	client: 'pg',
 	connection: {
-		connectionString: process.env.DATABASE_URL,
-		ssl: true,
+		// connectionString: process.env.DATABASE_URL,
+		// ssl: true,
+		host : '127.0.0.1',
+	  	user : 'postgres',
+	  	password : 'Infinite7*',
+	  	database : 'vegetarian-with-you'
 	}
+});
+
+cloudinary.config({ 
+	cloud_name: 'alinfy', 
+	api_key: 225325956632848, 
+	api_secret: 'pNuy4D20wzTqjorV1y47ms_dKok'
 });
 
 const auth = require('./users-handler/auth');
@@ -34,7 +45,6 @@ const requestRestaurantById = require('./restaurants-handler/request-restaurant-
 
 const createReview = require('./reviews-handler/create-review');
 const updateReview = require('./reviews-handler/update-review');
-const deletePhoto = require('./reviews-handler/delete-photo');
 const requestRestaurantReviews = require('./reviews-handler/request-restaurant-reviews');
 const requestRestaurantReviewsWithAuth = require('./reviews-handler/request-restaurant-reviews-with-auth');
 const requestUserReviews= require('./reviews-handler/request-user-reviews');
@@ -75,7 +85,7 @@ app.patch('/users/editprofile', auth, editProfile.handleEditProfile(knex));
 app.post('/users/uploadavatar', auth, uploadAvatar.handleUploadAvatar(knex));
 
 // Delete user avatar
-app.delete('/users/deleteavatar', auth, deleteAvatar.handleDeleteAvatar(knex));
+app.delete('/users/deleteavatar', auth, deleteAvatar.handleDeleteAvatar(knex, cloudinary));
 
 // Update email
 app.patch('/users/updateemail', auth, updateEmail.handleUpdateEmail(knex));
@@ -84,7 +94,7 @@ app.patch('/users/updateemail', auth, updateEmail.handleUpdateEmail(knex));
 app.patch('/users/resetpassword', auth, resetPassword.handleResetPassword(knex, bcrypt));
 
 // Delete an user / close account
-app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bcrypt));
+app.delete('/users/closeaccount', auth, closeAccount.handleCloseAccount(knex, bcrypt, cloudinary));
 
 
 // Create a new restaurant
@@ -101,13 +111,10 @@ app.get('/restaurants/:id', requestRestaurantById.handleRequestRestaurantById(kn
 
 
 // Create a new review
-app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex));
+app.post('/onreview/createreview', auth, createReview.handleCreateReview(knex, cloudinary));
 
 // Update an existing review
-app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex));
-
-// Delete photo
-app.delete('/onreview/deletephoto', auth, deletePhoto.handleDeletePhoto());
+app.patch('/onreview/updatereview', auth, updateReview.handleUpdateReview(knex, cloudinary));
 
 // Request all reviews based on restaurant id (no auth)
 app.get('/reviews', requestRestaurantReviews.handleRequestRestaurantReviews(knex));
@@ -125,7 +132,7 @@ app.patch('/onreview/reviewhelpful', auth, reviewHelpful.handleReviewHelpful(kne
 app.patch('/onreview/reportreview', auth, reportReview.handleReportReview(knex));
 
 // Delete review
-app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex));
+app.delete('/onreview/deletereview', auth, deleteReview.handleDeleteReview(knex, cloudinary));
 
 
 app.listen(port, error => {

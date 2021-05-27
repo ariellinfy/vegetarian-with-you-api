@@ -1,10 +1,10 @@
 const refreshData = require('../restaurants-handler/refresh-data');
 
-const handleUpdateReview = (knex) => async (req, res) => {
+const handleUpdateReview = (knex, cloudinary) => async (req, res) => {
 	let { reviewId, restaurantId,
         foodRate, serviceRate, valueRate, atmosphereRate, 
         reviewTitle, reviewBody, visitPeriod, visitType, price, recommendDish, photos,
-        disclosure } = req.body;
+        disclosure, photosToDelete } = req.body;
 
 	if (!reviewId || !restaurantId || !foodRate || !serviceRate || !valueRate || !atmosphereRate || !reviewTitle || !reviewBody || !visitPeriod || !visitType || !price || !disclosure) {
 		return res.status(400).json({ error: 'Required input field missing, app under maintenance.' });
@@ -37,6 +37,22 @@ const handleUpdateReview = (knex) => async (req, res) => {
 
     if (isOwner) {
         try {
+            if (photosToDelete.length) {
+                photosToDelete.forEach(photo => {
+                    return cloudinary.uploader.destroy(photo.public_id, invalidate=true, function(error, result) {
+                        if (error) {
+                            return res.status(400).json({ error: 'Fail to remove cloudinary photo, app under maintenance.' });
+                        };
+                        if (result.result === 'not found') {
+                            return res.status(400).json({ error: 'Cloudinary photo not found, app under maintenance.' });
+                        };
+                        if (result.result === 'ok') {
+                            return;
+                        };
+                    })
+                })
+            };
+
             await knex('reviews').where('review_id', '=', reviewId)
             .update({
                 review_title: reviewTitle,

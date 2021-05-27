@@ -1,18 +1,11 @@
 const refreshData = require('../restaurants-handler/refresh-data');
-const cloudinary = require('cloudinary').v2;
 
-const handleDeleteReview = (knex) => async (req, res) => {
+const handleDeleteReview = (knex, cloudinary) => async (req, res) => {
 	const { reviewId, restaurantId, confirmDelete } = req.body;
 
 	if (!reviewId || !restaurantId || !confirmDelete){
 		return res.status(400).json({ error: "Required info missing, app under maintenance." });
 	};
-
-    cloudinary.config({ 
-        cloud_name: 'alinfy', 
-        api_key: process.env.CLOUDINARY_API_KEY, 
-        api_secret: process.env.CLOUDINARY_API_SECRET
-    });
 
     if (confirmDelete) {
         try {
