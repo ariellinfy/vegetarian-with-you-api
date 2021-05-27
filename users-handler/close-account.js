@@ -22,7 +22,7 @@ const handleCloseAccount = (knex, bcrypt, cloudinary) => async (req, res) => {
             await knex('users').select('avatar').where({ user_id: req.userId })
             .then(data => {
                 if (data[0].avatar) {
-                    cloudinary.uploader.destroy(data[0].avatar.public_id, invalidate=true, function(error, result) {
+                    return cloudinary.uploader.destroy(data[0].avatar.public_id, invalidate=true, (error, result) => {
                         if (error) {
                             return res.status(400).json({ error: 'Fail to remove cloudinary avatar, app under maintenance.' });
                         };

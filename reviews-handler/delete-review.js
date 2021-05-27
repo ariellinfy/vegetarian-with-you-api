@@ -22,9 +22,9 @@ const handleDeleteReview = (knex, cloudinary) => async (req, res) => {
             .then(data => {
                 if (data[0].photos.length) {
                     return data[0].photos.forEach(photo => {
-                        cloudinary.uploader.destroy(photo.public_id, invalidate=true, function(error, result) {
+                        cloudinary.uploader.destroy(photo.public_id, invalidate=true, (error, result) => {
                             if (error) {
-                                return res.status(400).json({ error: 'Fail to remove cloudinary photo, app under maintenance.' });
+                                return res.status(400).json({ error: 'Fail to remove cloudinary photos, app under maintenance.' });
                             };
                             if (result.result === 'not found') {
                                 return res.status(400).json({ error: 'Cloudinary photo not found, app under maintenance.' });
@@ -36,7 +36,7 @@ const handleDeleteReview = (knex, cloudinary) => async (req, res) => {
                     }
                 )}
             })
-            .catch(err => res.status(400).json({ error: 'Error removing stored photos, app under maintenance.' }))
+            .catch(err => res.status(400).json({ error: 'Error removing stored photos, app under maintenance.' }));
 
             await knex.select('*').from('reviews')
             .where({ review_id: reviewId })

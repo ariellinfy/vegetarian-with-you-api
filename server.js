@@ -3,24 +3,20 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const knex = require('knex')({
 	client: 'pg',
 	connection: {
-		// connectionString: process.env.DATABASE_URL,
-		// ssl: true,
-		host : '127.0.0.1',
-	  	user : 'postgres',
-	  	password : 'Infinite7*',
-	  	database : 'vegetarian-with-you'
+		connectionString: process.env.DATABASE_URL,
+		ssl: true,
 	}
 });
 
 cloudinary.config({ 
 	cloud_name: 'alinfy', 
-	api_key: 225325956632848, 
-	api_secret: 'pNuy4D20wzTqjorV1y47ms_dKok'
+	api_key: process.env.CLOUDINARY_API_KEY, 
+	api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 const auth = require('./users-handler/auth');
@@ -61,7 +57,7 @@ const port = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('success'));
 
 // Generate signature
-app.post('/users/generatesignature', auth, generateSignature.handleGenerateSignature());
+app.post('/users/generatesignature', auth, generateSignature.handleGenerateSignature(cloudinary));
 
 // Check user session
 app.get('/users', auth, checkUserSession.handleCheckUserSession(knex));

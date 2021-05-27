@@ -5,7 +5,7 @@ const handleDeleteAvatar = (knex, cloudinary) => (req, res) => {
 		return res.status(400).json({ error: 'Avatar url missing.' });
 	};
 
-    cloudinary.uploader.destroy(avatar.public_id, invalidate=true, function(error, result) {
+    cloudinary.uploader.destroy(avatar.public_id, invalidate=true, (error, result) => {
         if (error) {
             return res.status(400).json({ error: 'Fail to remove cloudinary avatar, app under maintenance.' });
         };
